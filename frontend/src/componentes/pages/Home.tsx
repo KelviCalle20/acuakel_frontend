@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUser, FaBars, FaTimes } from "react-icons/fa"; 
+import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa"; 
 import "./Home.css";
 
 function Home() {
@@ -18,14 +18,14 @@ function Home() {
               <i className="fa-solid fa-headset"></i>
 			  
               <div className="content-customer-support">
-                <span className="text">Soporte al cliente</span>
-                <span className="number">000-000-0000</span>
+                <span className="text"></span>
+                <span className="number"></span>
               </div>
 			  
             </div>
 
             <div className="container-logo">
-              <i className="fa-solid fa-mug-hot"></i>
+              <i className="fa-solid fa-mug-hot"><FaFish/></i>
               <h1 className="logo">
                 <a href="/">ACUARIOFILIA</a>
               </h1>
@@ -35,8 +35,12 @@ function Home() {
               <Link to="/login">
                 <FaUser className="fa-user" />
               </Link>
-              <i className="fa-solid fa-basket-shopping"></i>
+		
+            
               <div className="content-shopping-cart">
+				<Link to="#">
+                  <FaShoppingCart className="fa-user" />
+                </Link>
                 <span className="text">Carrito</span>
                 <span className="number">(0)</span>
               </div>
@@ -51,7 +55,6 @@ function Home() {
               <li><a href="#">Inicio</a></li>
               <li><a href="#">Tienda</a></li>
               <li><a href="#">Aprender sobre acuarismo</a></li>
-              <li><a href="#">Testimonios</a></li>
               <Link to="/usuarios" className="btn-admin">Ver usuarios</Link>
               <li><a href="#">Blog</a></li>
             </ul>
@@ -79,9 +82,15 @@ function Home() {
           <li><a href="#">Blog</a></li>
         </ul>
       </div>
-
-      
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
+
+	  <section className="banner">
+		<div className="content-banner">
+			<p>Acuariofilia</p>
+            <h2>ACUARIOS <br />DE TODO</h2>
+            <a href="#">Comprar ahora</a>
+        </div>
+      </section>
     </>
   );
 }
