@@ -272,7 +272,7 @@ html {
 /* ********************************** */
 .banner {
 	background-image: linear-gradient(100deg, #000000, #00000020),
-		url('img/banner.jpg');
+		url('src/componentes/assets/banner1.jpg');
 	height: 60rem;
 	background-size: cover;
 	background-position: center;
