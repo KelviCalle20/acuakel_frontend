@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import UserModal from "./userModal";
+import UserModal from "./UserModal";
 import "./UserTable.css";
 
 interface User {
@@ -50,8 +50,8 @@ function UserTable() {
     <div className="user-table-container">
       <table className="user-table">
         <thead>
-          <tr>
-            <th>ID</th>
+          <tr> 
+            {/*<th>ID</th>*/}
             <th>Nombre</th>
             <th>Email</th>
             <th>Acciones</th>
@@ -60,7 +60,7 @@ function UserTable() {
         <tbody>
           {users.map((u) => (
             <tr key={u.id}>
-              <td>{u.id}</td>
+          {/*<td>{u.id}</td>*/}
               <td>{u.nombre}</td>
               <td>{u.email}</td>
               <td>

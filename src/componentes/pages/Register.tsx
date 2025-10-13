@@ -10,7 +10,7 @@ const Register = () => {
   const [password, setPassword] = useState<string>('');
   const navigate = useNavigate(); // para redirigir al login
 
-  const handleRegister = async (e:any) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:4000/api/users/register', {
@@ -19,10 +19,15 @@ const Register = () => {
         password,
       });
       alert(res.data.message); // mensaje de éxito
-      navigate('/'); // redirige al login
-    } catch (err:any) {
-      console.error('Error en registro:', err.response?.data || err.message);
-      alert(err.response?.data?.error || 'Error en registro');
+      navigate('/login'); // redirige al login
+    } catch (err: unknown) {
+      if (axios.isAxiosError(err)) {
+        console.error('Error en registro:', err.response?.data || err.message);
+        alert(err.response?.data?.error || 'Error en registro');
+      } else {
+        console.error('Error desconocido:', err);
+        alert('Error desconocido en registro');
+      }
     }
   };
 

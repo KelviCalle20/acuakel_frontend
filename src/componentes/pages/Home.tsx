@@ -55,7 +55,8 @@ function Home() {
               <li><a href="#">Inicio</a></li>
               <li><a href="#">Tienda</a></li>
               <li><a href="#">Aprender sobre acuarismo</a></li>
-              <Link to="/usuarios" className="btn-admin">Ver usuarios</Link>
+              <li><a href="#">productos</a></li>
+              {/*<Link to="/usuarios" className="btn-admin">Ver usuarios</Link>*/}
               <li><a href="#">Blog</a></li>
             </ul>
 
@@ -66,6 +67,9 @@ function Home() {
               </button>
             </form>
           </nav>
+        </div>
+        <div className="admin-button-container">
+          <Link to="/usuarios" className="banner-btn">administrador</Link>
         </div>
       </header>
 
@@ -84,11 +88,11 @@ function Home() {
       </div>
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
 
-	  <section className="banner">
-		<div className="content-banner">
-			<p>Acuariofilia</p>
-            <h2>ACUARIOS <br />DE TODO</h2>
-            <a href="#">Comprar ahora</a>
+	    <section className="banner">
+		    <div className="content-banner">
+			    <p>Acuariofilia</p>
+              <h2>ACUARIOS <br />DE TODO</h2>
+              <a href="#">Comprar ahora</a>
         </div>
       </section>
     </>
