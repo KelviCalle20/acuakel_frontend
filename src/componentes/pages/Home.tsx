@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa";
+import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish, FaSearch } from "react-icons/fa";
 import "./Home.css";
 
 function Home() {
@@ -91,8 +91,9 @@ function Home() {
             <form className="search-form">
               <input type="search" placeholder="Buscar..." />
               <button className="btn-search">
-                <i className="fa-solid fa-magnifying-glass"></i>
+                <FaSearch className="fa-solid fa-magnifying-glass" />
               </button>
+
             </form>
           </nav>
         </div>
@@ -112,6 +113,11 @@ function Home() {
           <li><a href="#">Testimonios</a></li>
           <li><a href="#">Más</a></li>
           <li><a href="#">Blog</a></li>
+          <li className="mobile-cart">
+            <Link to="#">
+              <FaShoppingCart className="fa-shopping-cart" /> Carrito (0)
+            </Link>
+          </li>
         </ul>
       </div>
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
