@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from "axios";
 import "./Login.css";
 import { FaUser, FaLock } from "react-icons/fa";
@@ -7,12 +7,18 @@ import { FaUser, FaLock } from "react-icons/fa";
 const Login = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const res = await axios.post('http://localhost:4000/api/users/login', { email, password });
       alert(res.data.message);
+      const userName = res.data.user?.nombre || res.data.user?.name || '';
+      if (userName) {
+        localStorage.setItem('userName', userName);
+      }
+      navigate('/');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         alert(err.response?.data?.error || 'error en el login');

@@ -1,10 +1,27 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa"; 
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa";
 import "./Home.css";
 
 function Home() {
-  const [menuOpen, setMenuOpen] = useState(false); 
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedName = localStorage.getItem("userName");
+    if (storedName) {
+      setUserName(storedName);
+    }
+  }, []);
+
+  const handleLogout = (): void => {
+    localStorage.removeItem("userName");
+    setUserName(null);
+    navigate("/");
+  };
+
+
 
   return (
     <>
@@ -16,35 +33,46 @@ function Home() {
           <div className="container hero">
             <div className="customer-support">
               <i className="fa-solid fa-headset"></i>
-			  
+
               <div className="content-customer-support">
                 <span className="text"></span>
                 <span className="number"></span>
               </div>
-			  
+
             </div>
 
             <div className="container-logo">
-              <i className="fa-solid fa-mug-hot"><FaFish/></i>
+              <i className="fa-solid fa-mug-hot"><FaFish /></i>
               <h1 className="logo">
                 <a href="/">ACUARIOFILIA</a>
               </h1>
             </div>
 
             <div className="container-user">
-              <Link to="/login">
-                <FaUser className="fa-user" />
-              </Link>
-		
-            
+              {!userName ? (
+                <Link to="/login" className="login-section">
+                  <FaUser className="fa-user" />
+                  <span className="login-text">Iniciar sesión</span>
+                </Link>
+              ) : (
+                <div className="user-section">
+                  <div className="user-top">
+                    <FaUser className="fa-user" />
+                    <button onClick={handleLogout} className="logout-btn">Cerrar sesión</button>
+                  </div>
+                  <span className="user-name">{userName}</span>
+                </div>
+              )}
+
               <div className="content-shopping-cart">
-				<Link to="#">
+                <Link to="#">
                   <FaShoppingCart className="fa-user" />
                 </Link>
                 <span className="text">Carrito</span>
                 <span className="number">(0)</span>
               </div>
             </div>
+
           </div>
         </div>
 
@@ -88,11 +116,11 @@ function Home() {
       </div>
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
 
-	    <section className="banner">
-		    <div className="content-banner">
-			    <p>Acuariofilia</p>
-              <h2>ACUARIOS <br />DE TODO</h2>
-              <a href="#">Comprar ahora</a>
+      <section className="banner">
+        <div className="content-banner">
+          <p>Acuariofilia</p>
+          <h2>ACUARIOS <br />DE TODO</h2>
+          <a href="#">Comprar ahora</a>
         </div>
       </section>
     </>
