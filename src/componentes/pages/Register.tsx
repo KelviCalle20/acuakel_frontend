@@ -5,16 +5,27 @@ import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
 import './Register.css';
 
 const Register = () => {
-  const [nombre, setNombre] = useState<string>('');
+  const [name, setNombre] = useState<string>('');
+  const [ap, setAp] = useState<string>(''); // nuevo campo
+  const [am, setAm] = useState<string>(''); // nuevo campo
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [confirmPassword, setConfirmPassword] = useState<string>(''); // nuevo campo
   const navigate = useNavigate(); // para redirigir al login
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) {
+      alert('Las contraseñas no coinciden');
+      return;
+    }
+
     try {
       const res = await axios.post('http://localhost:4000/api/users/register', {
-        nombre,
+        name,
+        ap,
+        am,
         email,
         password,
       });
@@ -42,8 +53,30 @@ const Register = () => {
               type="text"
               placeholder="Nombre"
               required
-              value={nombre}
+              value={name}
               onChange={(e) => setNombre(e.target.value)}
+            />
+            <FaUser className="icon" />
+          </div>
+
+          <div className="input-box">
+            <input
+              type="text"
+              placeholder="Apellido Paterno"
+              required
+              value={ap}
+              onChange={(e) => setAp(e.target.value)}
+            />
+            <FaUser className="icon" />
+          </div>
+
+          <div className="input-box">
+            <input
+              type="text"
+              placeholder="Apellido Materno"
+              required
+              value={am}
+              onChange={(e) => setAm(e.target.value)}
             />
             <FaUser className="icon" />
           </div>
@@ -70,6 +103,17 @@ const Register = () => {
             <FaLock className="icon" />
           </div>
 
+          <div className="input-box">
+            <input
+              type="password"
+              placeholder="Confirmar contraseña"
+              required
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            <FaLock className="icon" />
+          </div>
+
           <button type="submit">Registrarse</button>
 
           <div className="register-link">
@@ -82,3 +126,4 @@ const Register = () => {
 };
 
 export default Register;
+

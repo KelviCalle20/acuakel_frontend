@@ -112,7 +112,7 @@ function Home() {
           <li><a href="#">Aprender sobre acuarismo</a></li>
           <li><a href="#">Testimonios</a></li>
           <li><a href="#">Más</a></li>
-          <li><a href="#">Blog</a></li>
+          <li><a href="#">Blog</a></li> 
           <li className="mobile-cart">
             <Link to="#">
               <FaShoppingCart className="fa-shopping-cart" /> Carrito (0)

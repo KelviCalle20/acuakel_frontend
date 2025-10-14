@@ -27,3 +27,9 @@ El frontend es la interfaz web donde interactúa el usuario. Consume los datos d
   Backend = lógica, datos y API REST.
 
   Frontend = interfaz web y experiencia de usuario.
+  PASOS
+   1. direccionarse a la ruta: 
+       \AppAcuarios\frontend
+   2. comando run
+      npm run dev           (red local)
+      npm run dev -- --host (NetWork)

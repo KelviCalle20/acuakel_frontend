@@ -56,8 +56,9 @@ const Login = () => {
           </div>
 
           <div className='remember-forgot'>
-            <a href="#">olvidaste la contraseña</a>
+            <Link to="/reset-password">¿Olvidaste la contraseña?</Link>
           </div>
+
 
           <button type='submit'>Iniciar Sesion</button>
 

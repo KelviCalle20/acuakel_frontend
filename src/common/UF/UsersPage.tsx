@@ -1,4 +1,5 @@
-import UserTable from "../UserTable";
+
+import UserTable from "./UserTable";
 
 function UsersPage() {
     return (
