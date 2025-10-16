@@ -3,7 +3,7 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: url('../assets/acuario_login.png') no-repeat;
+    background: url('../assets/bettas.jpg') no-repeat;
     background-size: cover;
     background-position: center;
 }
@@ -98,3 +98,60 @@
     text-decoration: underline;
 
 }
+
+.neon-button-top {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  padding: 10px 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.6);
+  border-radius: 30px;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.6) inset;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 1000;
+}
+
+.neon-button-top:hover {
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.6), 0 0 40px rgba(255, 255, 255, 0.6) inset;
+  transform: scale(1.05);
+}
+
+.input-box {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  margin: 30px 0;
+}
+
+/* Label con estilo translúcido */
+.input-box label {
+  position: absolute;
+  left: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.6); /* blanco translúcido */
+  font-size: 16px;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  background: transparent;
+}
+
+/* Efecto flotante y neón al enfocar o llenar */
+.input-box input:focus ~ label,
+.input-box input:valid ~ label {
+  top: -8px;
+  left: 15px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.6); /* tono turquesa neón */
+  background: rgba(0, 0, 0, 0.4); /* fondo translúcido */
+  padding: 0 6px;
+  border-radius: 5px;
+}
+

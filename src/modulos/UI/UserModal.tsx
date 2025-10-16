@@ -56,12 +56,12 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
   };
 
   return (
-    
+
     <div className="modal-overlay">
-      
+
       <div className="modal">
-        
-        <h2>{user?.id ? "Editar Usuario" : "Adicion de Usuario"}</h2>
+
+        <h2>{user?.id ? "Actualizar Usuario" : "Adicionar de Usuario"}</h2>
 
         <input
           type="text"
@@ -77,6 +77,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           onChange={handleChange}
           placeholder="Correo"
         />
+       
         {!user?.id && (
           <input
             type="password"

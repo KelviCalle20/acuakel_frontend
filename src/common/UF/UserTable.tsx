@@ -7,9 +7,10 @@ import "./UserTable.css";
 interface User {
   id: number;
   name: string;
-  ap: string;  // nuevo
-  am: string;  // nuevo
+  ap: string;
+  am: string;
   email: string;
+  state: boolean;
 }
 
 export default function UserTable() {
@@ -20,7 +21,7 @@ export default function UserTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  //Obtener usuarios
+  // Obtener usuarios
   const fetchUsers = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users");
@@ -38,12 +39,12 @@ export default function UserTable() {
     fetchUsers();
   }, []);
 
-  //Búsqueda automática
+  // Búsqueda automática
   useEffect(() => {
     const filtered = users.filter(
       (u) =>
         u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.ap.toLowerCase().includes(searchTerm.toLowerCase()) ||  // búsqueda por apellidos
+        u.ap.toLowerCase().includes(searchTerm.toLowerCase()) ||
         u.am.toLowerCase().includes(searchTerm.toLowerCase()) ||
         u.email.toLowerCase().includes(searchTerm.toLowerCase())
     );
@@ -51,7 +52,7 @@ export default function UserTable() {
   }, [searchTerm, users]);
 
   const openModal = (user?: User) => {
-    setSelectedUser(user || { id: 0, name: "", ap: "", am: "", email: "" });
+    setSelectedUser(user || { id: 0, name: "", ap: "", am: "", email: "", state: true });
     setIsModalOpen(true);
   };
 
@@ -60,22 +61,22 @@ export default function UserTable() {
     setIsModalOpen(false);
   };
 
-  //Botón salir (Navbar)
+  // Botón salir (Navbar)
   const handleExit = () => {
     navigate("/");
   };
 
   return (
     <div className="user-table-page">
-      {/* NAVBAR */}
-      <nav className="navbar2">
+      {/* bandeja NAVBAR */}
+      <nav className="navbar-tray">
         <div className="navbar-left">
           <h2>Gestión de Usuarios</h2>
         </div>
 
         <div className="navbar-right">
           <button className="exit-button" onClick={handleExit}>
-            <FaSignOutAlt /> Salir
+            <FaSignOutAlt />
           </button>
         </div>
       </nav>
@@ -105,8 +106,8 @@ export default function UserTable() {
           <thead>
             <tr>
               <th>Nombre</th>
-              <th>Apellido Paterno</th>  {/* nuevo */}
-              <th>Apellido Materno</th>  {/* nuevo */}
+              <th>Apellido Paterno</th>
+              <th>Apellido Materno</th>
               <th>Correo</th>
               <th>Acciones</th>
             </tr>
@@ -116,8 +117,8 @@ export default function UserTable() {
               filteredUsers.map((user) => (
                 <tr key={user.id}>
                   <td>{user.name}</td>
-                  <td>{user.ap}</td>  {/* nuevo */}
-                  <td>{user.am}</td>  {/* nuevo */}
+                  <td>{user.ap}</td>
+                  <td>{user.am}</td>
                   <td>{user.email}</td>
                   <td>
                     <button
@@ -126,6 +127,26 @@ export default function UserTable() {
                     >
                       <FaPen />
                     </button>
+
+                    <label className="switch">
+                      <input
+                        type="checkbox"
+                        checked={user.state}
+                        onChange={async (e) => {
+                          try {
+                            await fetch(`http://localhost:4000/api/users/${user.id}/status`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ state: e.target.checked }),
+                            });
+                            fetchUsers(); // refrescar tabla
+                          } catch (err) {
+                            console.error(err);
+                          }
+                        }}
+                      />
+                      <span className="slider round"></span>
+                    </label>
                   </td>
                 </tr>
               ))
@@ -149,8 +170,3 @@ export default function UserTable() {
     </div>
   );
 }
-
-
-
-
-

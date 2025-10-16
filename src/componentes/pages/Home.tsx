@@ -85,7 +85,7 @@ function Home() {
               <li><a href="#">Aprender sobre acuarismo</a></li>
               <li><a href="#">productos</a></li>
               {/*<Link to="/usuarios" className="btn-admin">Ver usuarios</Link>*/}
-              <li><a href="#">Blog</a></li>
+              <li><a href="#">Galeria Multimedia</a></li>
             </ul>
 
             <form className="search-form">

@@ -51,68 +51,81 @@ const Register = () => {
           <div className="input-box">
             <input
               type="text"
-              placeholder="Nombre"
+              id="name"
               required
               value={name}
               onChange={(e) => setNombre(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="name">Nombre</label>
             <FaUser className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="text"
-              placeholder="Apellido Paterno"
+              id="ap"
               required
               value={ap}
               onChange={(e) => setAp(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="ap">Apellido Paterno</label>
             <FaUser className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="text"
-              placeholder="Apellido Materno"
+              id="am"
               required
               value={am}
               onChange={(e) => setAm(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="am">Apellido Materno</label>
             <FaUser className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="email"
-              placeholder="Correo electrónico"
+              id="email"
               required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="email">Correo electrónico</label>
             <FaEnvelope className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="password"
-              placeholder="Contraseña"
+              id="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="password">Contraseña</label>
             <FaLock className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="password"
-              placeholder="Confirmar contraseña"
+              id="confirmPassword"
               required
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              autoComplete='off'
             />
+            <label htmlFor="confirmPassword">Confirmar contraseña</label>
             <FaLock className="icon" />
           </div>
+
 
           <button type="submit">Registrarse</button>
 
