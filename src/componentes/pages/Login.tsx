@@ -31,9 +31,9 @@ const Login = () => {
   return (
     <div className='login-page'>
       <Link to="/" className="neon-button-top">Volver al inicio</Link>
-      <div className='wrapper'>
+      <div className='wrapper-login'>
         <form onSubmit={handleSubmit}>
-          <h1>Login</h1>
+          <h1>Iniciar Sesion</h1>
           <div className='input-box'>
             <input
               type="email"
@@ -56,7 +56,7 @@ const Login = () => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Contraseña</label>
             <FaLock className='icon' />
           </div>
 

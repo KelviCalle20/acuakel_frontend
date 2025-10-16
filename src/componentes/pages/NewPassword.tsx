@@ -24,7 +24,7 @@ const NewPassword = () => {
 
   return (
     <div className="login-page">
-      <div className="wrapper">
+      <div className="wrapper-login">
         <form onSubmit={handleSubmit}>
           <h1>Nueva Contraseña</h1>
 

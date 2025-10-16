@@ -21,7 +21,6 @@ export default function UserTable() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Obtener usuarios
   const fetchUsers = async () => {
     try {
       const res = await fetch("http://localhost:4000/api/users");
@@ -39,7 +38,6 @@ export default function UserTable() {
     fetchUsers();
   }, []);
 
-  // Búsqueda automática
   useEffect(() => {
     const filtered = users.filter(
       (u) =>
@@ -52,7 +50,9 @@ export default function UserTable() {
   }, [searchTerm, users]);
 
   const openModal = (user?: User) => {
-    setSelectedUser(user || { id: 0, name: "", ap: "", am: "", email: "", state: true });
+    setSelectedUser(
+      user || { id: 0, name: "", ap: "", am: "", email: "", state: true }
+    );
     setIsModalOpen(true);
   };
 
@@ -61,19 +61,16 @@ export default function UserTable() {
     setIsModalOpen(false);
   };
 
-  // Botón salir (Navbar)
   const handleExit = () => {
     navigate("/");
   };
 
   return (
     <div className="user-table-page">
-      {/* bandeja NAVBAR */}
       <nav className="navbar-tray">
         <div className="navbar-left">
           <h2>Gestión de Usuarios</h2>
         </div>
-
         <div className="navbar-right">
           <button className="exit-button" onClick={handleExit}>
             <FaSignOutAlt />
@@ -81,9 +78,7 @@ export default function UserTable() {
         </div>
       </nav>
 
-      {/* Contenedor principal */}
       <div className="user-table-container">
-        {/* Encabezado con búsqueda y agregar */}
         <div className="table-header">
           <div className="search-container">
             <input
@@ -95,13 +90,11 @@ export default function UserTable() {
             />
             <FaSearch className="search-icon" />
           </div>
-
           <button className="add-button" onClick={() => openModal()}>
             <FaUserPlus />
           </button>
         </div>
 
-        {/* Tabla */}
         <table className="user-table">
           <thead>
             <tr>
@@ -109,6 +102,7 @@ export default function UserTable() {
               <th>Apellido Paterno</th>
               <th>Apellido Materno</th>
               <th>Correo</th>
+              <th>Estado</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -120,6 +114,11 @@ export default function UserTable() {
                   <td>{user.ap}</td>
                   <td>{user.am}</td>
                   <td>{user.email}</td>
+                  <td
+                    className={user.state ? "estado-activo" : "estado-inactivo"}
+                  >
+                    {user.state ? "ACTIVO" : "INACTIVO"}
+                  </td>
                   <td>
                     <button
                       className="edit-btn"
@@ -134,12 +133,15 @@ export default function UserTable() {
                         checked={user.state}
                         onChange={async (e) => {
                           try {
-                            await fetch(`http://localhost:4000/api/users/${user.id}/status`, {
-                              method: "PATCH",
-                              headers: { "Content-Type": "application/json" },
-                              body: JSON.stringify({ state: e.target.checked }),
-                            });
-                            fetchUsers(); // refrescar tabla
+                            await fetch(
+                              `http://localhost:4000/api/users/${user.id}/status`,
+                              {
+                                method: "PATCH",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ state: e.target.checked }),
+                              }
+                            );
+                            fetchUsers();
                           } catch (err) {
                             console.error(err);
                           }
@@ -152,16 +154,15 @@ export default function UserTable() {
               ))
             ) : (
               <tr>
-                <td colSpan={5}>No se encontraron usuarios</td>
+                <td colSpan={6}>No se encontraron usuarios</td>
               </tr>
             )}
           </tbody>
         </table>
 
-        {/* Modal */}
-        {isModalOpen && (
+        {isModalOpen && selectedUser && (
           <UserModal
-            user={selectedUser!}
+            user={selectedUser}
             closeModal={closeModal}
             refreshUsers={fetchUsers}
           />
@@ -170,3 +171,4 @@ export default function UserTable() {
     </div>
   );
 }
+

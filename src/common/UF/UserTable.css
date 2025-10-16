@@ -157,7 +157,8 @@
   position: absolute;
   cursor: pointer;
   top: 0; left: 0; right: 0; bottom: 0;
-  background-color: #ccc;
+  background-color: #dc3545;
+  box-shadow: 0 0 5px #dc3545;
   transition: .4s;
   border-radius: 34px;
 }
@@ -183,4 +184,12 @@ input:checked + .slider:before {
   transform: translateX(20px);
 }
 
+.estado-activo {
+  color: #28a745;
+  font-weight: 500;
+}
 
+.estado-inactivo {
+  color: #dc3545;
+  font-weight: 500;
+}

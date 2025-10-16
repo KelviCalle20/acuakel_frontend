@@ -44,7 +44,7 @@ const Register = () => {
 
   return (
     <div className='register-page'>
-      <div className="wrapper">
+      <div className="wrapper-register">
         <form onSubmit={handleRegister}>
           <h1>Registro</h1>
 
@@ -61,30 +61,32 @@ const Register = () => {
             <FaUser className="icon" />
           </div>
 
-          <div className="input-box">
-            <input
-              type="text"
-              id="ap"
-              required
-              value={ap}
-              onChange={(e) => setAp(e.target.value)}
-              autoComplete='off'
-            />
-            <label htmlFor="ap">Apellido Paterno</label>
-            <FaUser className="icon" />
-          </div>
+          <div className='apellidos-container'>
+            <div className="input-box">
+              <input
+                type="text"
+                id="ap"
+                required
+                value={ap}
+                onChange={(e) => setAp(e.target.value)}
+                autoComplete='off'
+              />
+              <label htmlFor="ap">Apellido Paterno</label>
+              <FaUser className="icon" />
+            </div>
 
-          <div className="input-box">
-            <input
-              type="text"
-              id="am"
-              required
-              value={am}
-              onChange={(e) => setAm(e.target.value)}
-              autoComplete='off'
-            />
-            <label htmlFor="am">Apellido Materno</label>
-            <FaUser className="icon" />
+            <div className="input-box">
+              <input
+                type="text"
+                id="am"
+                required
+                value={am}
+                onChange={(e) => setAm(e.target.value)}
+                autoComplete='off'
+              />
+              <label htmlFor="am">Apellido Materno</label>
+              <FaUser className="icon" />
+            </div>
           </div>
 
           <div className="input-box">

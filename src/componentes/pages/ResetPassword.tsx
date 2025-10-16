@@ -26,7 +26,7 @@ const ResetPassword = () => {
 
     return (
         <div className="login-page">
-            <div className="wrapper">
+            <div className="wrapper-login">
                 <form onSubmit={handleReset}>
                     <h1>{sent ? "¡Correo enviado!" : "Restablecer Contraseña"}</h1>
 

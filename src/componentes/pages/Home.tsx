@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish, FaSearch } from "react-icons/fa";
 import "./Home.css";
@@ -6,22 +6,35 @@ import "./Home.css";
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
     if (storedName) {
       setUserName(storedName);
     }
+
+    // Cerrar menú al hacer click fuera
+    const handleClickOutside = (event: MouseEvent) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+        setUserMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
 
   const handleLogout = (): void => {
     localStorage.removeItem("userName");
     setUserName(null);
+    setUserMenuOpen(false);
     navigate("/");
   };
-
-
 
   return (
     <>
@@ -33,12 +46,10 @@ function Home() {
           <div className="container hero">
             <div className="customer-support">
               <i className="fa-solid fa-headset"></i>
-
               <div className="content-customer-support">
                 <span className="text"></span>
                 <span className="number"></span>
               </div>
-
             </div>
 
             <div className="container-logo">
@@ -55,12 +66,18 @@ function Home() {
                   <span className="login-text">Iniciar sesión</span>
                 </Link>
               ) : (
-                <div className="user-section">
-                  <div className="user-top">
+                <div className="user-section" ref={userMenuRef}>
+                  <div className="user-top" onClick={() => setUserMenuOpen(!userMenuOpen)}>
                     <FaUser className="fa-user" />
-                    <button onClick={handleLogout} className="logout-btn">Cerrar sesión</button>
+                    <span className="user-name">{userName}</span>
                   </div>
-                  <span className="user-name">{userName}</span>
+                  {userMenuOpen && (
+                    <div className="user-dropdown">
+                      <button onClick={handleLogout} className="logout-btn-dropdown">
+                        <FaUser /> Cerrar sesión
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -68,8 +85,6 @@ function Home() {
                 <Link to="#">
                   <FaShoppingCart className="fa-user" />
                 </Link>
-                <span className="text">Carrito</span>
-                <span className="number">(0)</span>
               </div>
             </div>
 
@@ -84,7 +99,6 @@ function Home() {
               <li><a href="#">Tienda</a></li>
               <li><a href="#">Aprender sobre acuarismo</a></li>
               <li><a href="#">productos</a></li>
-              {/*<Link to="/usuarios" className="btn-admin">Ver usuarios</Link>*/}
               <li><a href="#">Galeria Multimedia</a></li>
             </ul>
 
@@ -93,7 +107,6 @@ function Home() {
               <button className="btn-search">
                 <FaSearch className="fa-solid fa-magnifying-glass" />
               </button>
-
             </form>
           </nav>
         </div>
@@ -112,7 +125,7 @@ function Home() {
           <li><a href="#">Aprender sobre acuarismo</a></li>
           <li><a href="#">Testimonios</a></li>
           <li><a href="#">Más</a></li>
-          <li><a href="#">Blog</a></li> 
+          <li><a href="#">Blog</a></li>
           <li className="mobile-cart">
             <Link to="#">
               <FaShoppingCart className="fa-shopping-cart" /> Carrito (0)

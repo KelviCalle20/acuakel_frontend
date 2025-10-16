@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./UserModal.css";
 
 interface User {
   id?: number; // opcional, solo existe al editar
   name: string;
+  ap?: string;
+  am?: string;
   email: string;
   password?: string; // solo al crear
 }
@@ -15,9 +17,25 @@ interface Props {
 }
 
 function UserModal({ user, closeModal, refreshUsers }: Props) {
-  const [formData, setFormData] = useState<User>(
-    user || { name: "", email: "", password: "" }
-  );
+  const [formData, setFormData] = useState<User>({
+    name: "",
+    ap: "",
+    am: "",
+    email: "",
+    password: "",
+  });
+
+  useEffect(() => {
+    if (user) {
+      setFormData({
+        name: user.name || "",
+        ap: user.ap || "",
+        am: user.am || "",
+        email: user.email || "",
+        password: "",
+      });
+    }
+  }, [user]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -31,7 +49,9 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            nombre: formData.name,
+            name: formData.name,
+            ap: formData.ap,
+            am: formData.am,
             email: formData.email,
           }),
         });
@@ -41,7 +61,9 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            nombre: formData.name,
+            name: formData.name,
+            ap: formData.ap,
+            am: formData.am,
             email: formData.email,
             password: formData.password,
           }),
@@ -56,19 +78,30 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
   };
 
   return (
-
     <div className="modal-overlay">
-
       <div className="modal">
-
-        <h2>{user?.id ? "Actualizar Usuario" : "Adicionar de Usuario"}</h2>
+        <h2>{user?.id ? "Actualizar Usuario" : "Adicionar Usuario"}</h2>
 
         <input
           type="text"
-          name="nombre"
+          name="name"
           value={formData.name}
           onChange={handleChange}
           placeholder="Nombre"
+        />
+        <input
+          type="text"
+          name="ap"
+          value={formData.ap}
+          onChange={handleChange}
+          placeholder="Apellido Paterno"
+        />
+        <input
+          type="text"
+          name="am"
+          value={formData.am}
+          onChange={handleChange}
+          placeholder="Apellido Materno"
         />
         <input
           type="email"
@@ -77,7 +110,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           onChange={handleChange}
           placeholder="Correo"
         />
-       
+
         {!user?.id && (
           <input
             type="password"
@@ -102,5 +135,10 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
 }
 
 export default UserModal;
+
+
+
+
+
 
 
