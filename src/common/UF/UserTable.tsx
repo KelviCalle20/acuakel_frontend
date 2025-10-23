@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FaSearch, FaUserPlus, FaSignOutAlt, FaPen } from "react-icons/fa";
+import { FaSearch, FaUserPlus, FaSignOutAlt, FaPen, FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import UserModal from "../../modulos/UI/UserModal";
 import "./UserTable.css";
@@ -19,6 +19,7 @@ export default function UserTable() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [menuOpen, setBandejaOpen] = useState(false);
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
@@ -69,6 +70,7 @@ export default function UserTable() {
     <div className="user-table-page">
       <nav className="navbar-tray">
         <div className="navbar-left">
+          <FaBars className="bandeja-toggle" onClick={() => setBandejaOpen(!menuOpen)} />
           <h2>Gestión de Usuarios</h2>
         </div>
         <div className="navbar-right">
@@ -168,6 +170,20 @@ export default function UserTable() {
           />
         )}
       </div>
+      <div className={`sidebar-bandeja ${menuOpen ? "active" : ""}`}>
+        <div className="close-areaBandeja">
+          <FaTimes className="close-iconBandeja" onClick={() => setBandejaOpen(false)} />
+        </div>
+        <ul>
+          <li><a href="#">Inicio</a></li>
+          <li><a href="#">Tienda</a></li>
+          <li><a href="#">Aprender sobre acuarismo</a></li>
+          <li><a href="#">Testimonios</a></li>
+          <li><a href="#">Más</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+      {menuOpen && <div className="overlay-two" onClick={() => setBandejaOpen(false)} />}
     </div>
   );
 }

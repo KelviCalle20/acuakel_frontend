@@ -5,6 +5,7 @@ import Home from './componentes/pages/Home';
 import UsersPage from './common/UF/UsersPage';
 import ResetPassword from "./componentes/pages/ResetPassword";
 import NewPassword from "./componentes/pages/NewPassword";
+import Cart from './componentes/pages/Cart';
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/Usuarios" element={<UsersPage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/cart" element={<Cart />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-password/:token" element={<NewPassword />} />
         <Route path="/register" element={<Register />} />
