@@ -5,16 +5,16 @@ import "./Login.css";
 import { FaUser, FaLock } from "react-icons/fa";
 
 const Login = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [correo, setEmail] = useState<string>('');
+  const [contraseña, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:4000/api/users/login', { email, password });
+      const res = await axios.post('http://localhost:4000/api/users/login', { correo, contraseña });
       //alert(res.data.message);
-      const userName = res.data.user?.name || res.data.user?.name || '';
+      const userName = res.data.user?.nombre || res.data.user?.nombre || '';
       if (userName) {
         localStorage.setItem('userName', userName);
       }
@@ -37,26 +37,26 @@ const Login = () => {
           <div className='input-box'>
             <input
               type="email"
-              id="email"
+              id="correo"
               required
-              value={email}
+              value={correo}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="email">Correo electrónico</label>
+            <label htmlFor="correo">Correo electrónico</label>
             <FaUser className='icon' />
           </div>
 
           <div className='input-box'>
             <input
               type="password"
-              id="password"
+              id="contraseña"
               required
-              value={password}
+              value={contraseña}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="contraseña">Contraseña</label>
             <FaLock className='icon' />
           </div>
 

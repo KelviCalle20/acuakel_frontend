@@ -3,11 +3,11 @@ import "./UserModal.css";
 
 interface User {
   id?: number; // opcional, solo existe al editar
-  name: string;
-  ap?: string;
-  am?: string;
-  email: string;
-  password?: string; // solo al crear
+  nombre: string;
+  apellido_paterno?: string;
+  apellido_materno?: string;
+  correo: string;
+  contraseña?: string; // solo al crear
 }
 
 interface Props {
@@ -18,21 +18,21 @@ interface Props {
 
 function UserModal({ user, closeModal, refreshUsers }: Props) {
   const [formData, setFormData] = useState<User>({
-    name: "",
-    ap: "",
-    am: "",
-    email: "",
-    password: "",
+    nombre: "",
+    apellido_paterno: "",
+    apellido_materno: "",
+    correo: "",
+    contraseña: "",
   });
 
   useEffect(() => {
     if (user) {
       setFormData({
-        name: user.name || "",
-        ap: user.ap || "",
-        am: user.am || "",
-        email: user.email || "",
-        password: "",
+        nombre: user.nombre || "",
+        apellido_paterno: user.apellido_paterno || "",
+        apellido_materno: user.apellido_materno || "",
+        correo: user.correo || "",
+        contraseña: "",
       });
     }
   }, [user]);
@@ -49,10 +49,10 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name: formData.name,
-            ap: formData.ap,
-            am: formData.am,
-            email: formData.email,
+            nombre: formData.nombre,
+            apellido_paterno: formData.apellido_paterno,
+            apellido_materno: formData.apellido_materno,
+            correo: formData.correo,
           }),
         });
       } else {
@@ -61,11 +61,11 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            name: formData.name,
-            ap: formData.ap,
-            am: formData.am,
-            email: formData.email,
-            password: formData.password,
+            nombre: formData.nombre,
+            apellido_paterno: formData.apellido_paterno,
+            apellido_materno: formData.apellido_materno,
+            correo: formData.correo,
+            contraseña: formData.contraseña,
           }),
         });
       }
@@ -84,29 +84,29 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
 
         <input
           type="text"
-          name="name"
-          value={formData.name}
+          name="nombre"
+          value={formData.nombre}
           onChange={handleChange}
           placeholder="Nombre"
         />
         <input
           type="text"
-          name="ap"
-          value={formData.ap}
+          name="apellido_paterno"
+          value={formData.apellido_paterno}
           onChange={handleChange}
           placeholder="Apellido Paterno"
         />
         <input
           type="text"
-          name="am"
-          value={formData.am}
+          name="apellido_materno"
+          value={formData.apellido_materno}
           onChange={handleChange}
           placeholder="Apellido Materno"
         />
         <input
           type="email"
-          name="email"
-          value={formData.email}
+          name="correo"
+          value={formData.correo}
           onChange={handleChange}
           placeholder="Correo"
         />
@@ -114,8 +114,8 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         {!user?.id && (
           <input
             type="password"
-            name="password"
-            value={formData.password || ""}
+            name="contraseña"
+            value={formData.contraseña || ""}
             onChange={handleChange}
             placeholder="Contraseña"
           />

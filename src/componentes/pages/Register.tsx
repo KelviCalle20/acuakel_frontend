@@ -5,29 +5,29 @@ import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
 import './Register.css';
 
 const Register = () => {
-  const [name, setNombre] = useState<string>('');
-  const [ap, setAp] = useState<string>(''); // nuevo campo
-  const [am, setAm] = useState<string>(''); // nuevo campo
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [nombre, setNombre] = useState<string>('');
+  const [apellido_paterno, setAp] = useState<string>(''); // nuevo campo
+  const [apellido_materno, setAm] = useState<string>(''); // nuevo campo
+  const [correo, setEmail] = useState<string>('');
+  const [contraseña, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>(''); // nuevo campo
   const navigate = useNavigate(); // para redirigir al login
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (password !== confirmPassword) {
+    if (contraseña !== confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
 
     try {
       const res = await axios.post('http://localhost:4000/api/users/register', {
-        name,
-        ap,
-        am,
-        email,
-        password,
+        nombre,
+        apellido_paterno,
+        apellido_materno,
+        correo,
+        contraseña,
       });
       alert(res.data.message); // mensaje de éxito
       navigate('/login'); // redirige al login
@@ -51,13 +51,13 @@ const Register = () => {
           <div className="input-box">
             <input
               type="text"
-              id="name"
+              id="nombre"
               required
-              value={name}
+              value={nombre}
               onChange={(e) => setNombre(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="name">Nombre</label>
+            <label htmlFor="nombre">Nombre</label>
             <FaUser className="icon" />
           </div>
 
@@ -65,26 +65,26 @@ const Register = () => {
             <div className="input-box">
               <input
                 type="text"
-                id="ap"
+                id="apellido_paterno"
                 required
-                value={ap}
+                value={apellido_paterno}
                 onChange={(e) => setAp(e.target.value)}
                 autoComplete='off'
               />
-              <label htmlFor="ap">Apellido Paterno</label>
+              <label htmlFor="apellido_paterno">Apellido Paterno</label>
               <FaUser className="icon" />
             </div>
 
             <div className="input-box">
               <input
                 type="text"
-                id="am"
+                id="apellido_materno"
                 required
-                value={am}
+                value={apellido_materno}
                 onChange={(e) => setAm(e.target.value)}
                 autoComplete='off'
               />
-              <label htmlFor="am">Apellido Materno</label>
+              <label htmlFor="apellido_materno">Apellido Materno</label>
               <FaUser className="icon" />
             </div>
           </div>
@@ -92,26 +92,26 @@ const Register = () => {
           <div className="input-box">
             <input
               type="email"
-              id="email"
+              id="correo"
               required
-              value={email}
+              value={correo}
               onChange={(e) => setEmail(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="email">Correo electrónico</label>
+            <label htmlFor="correo">Correo electrónico</label>
             <FaEnvelope className="icon" />
           </div>
 
           <div className="input-box">
             <input
               type="password"
-              id="password"
+              id="contraseña"
               required
-              value={password}
+              value={contraseña}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="password">Contraseña</label>
+            <label htmlFor="contraseña">Contraseña</label>
             <FaLock className="icon" />
           </div>
 

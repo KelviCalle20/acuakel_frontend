@@ -6,11 +6,11 @@ import "./UserTable.css";
 
 interface User {
   id: number;
-  name: string;
-  ap: string;
-  am: string;
-  email: string;
-  state: boolean;
+  nombre: string;
+  apellido_paterno: string;
+  apellido_materno: string;
+  correo: string;
+  estado: boolean;
 }
 
 export default function UserTable() {
@@ -42,17 +42,17 @@ export default function UserTable() {
   useEffect(() => {
     const filtered = users.filter(
       (u) =>
-        u.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.ap.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.am.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        u.email.toLowerCase().includes(searchTerm.toLowerCase())
+        u.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.apellido_paterno.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.apellido_materno.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        u.correo.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
   }, [searchTerm, users]);
 
   const openModal = (user?: User) => {
     setSelectedUser(
-      user || { id: 0, name: "", ap: "", am: "", email: "", state: true }
+      user || { id: 0, nombre: "", apellido_paterno: "", apellido_materno: "", correo: "", estado: true }
     );
     setIsModalOpen(true);
   };
@@ -112,14 +112,14 @@ export default function UserTable() {
             {filteredUsers.length > 0 ? (
               filteredUsers.map((user) => (
                 <tr key={user.id}>
-                  <td>{user.name}</td>
-                  <td>{user.ap}</td>
-                  <td>{user.am}</td>
-                  <td>{user.email}</td>
+                  <td>{user.nombre}</td>
+                  <td>{user.apellido_paterno}</td>
+                  <td>{user.apellido_materno}</td>
+                  <td>{user.correo}</td>
                   <td
-                    className={user.state ? "estado-activo" : "estado-inactivo"}
+                    className={user.estado ? "estado-activo" : "estado-inactivo"}
                   >
-                    {user.state ? "ACTIVO" : "INACTIVO"}
+                    {user.estado ? "ACTIVO" : "INACTIVO"}
                   </td>
                   <td>
                     <button
@@ -132,7 +132,7 @@ export default function UserTable() {
                     <label className="switch">
                       <input
                         type="checkbox"
-                        checked={user.state}
+                        checked={user.estado}
                         onChange={async (e) => {
                           try {
                             await fetch(
@@ -140,7 +140,7 @@ export default function UserTable() {
                               {
                                 method: "PATCH",
                                 headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ state: e.target.checked }),
+                                body: JSON.stringify({ estado: e.target.checked }),
                               }
                             );
                             fetchUsers();

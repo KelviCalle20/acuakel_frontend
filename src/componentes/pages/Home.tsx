@@ -3,8 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 //Etiqueta header(icon)
 import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa";
 //Etiqueta main(icon)
-import { FaPlane, FaWallet, FaGift, FaHeadset, FaEye, FaHeart, FaExchangeAlt, FaStar, FaShoppingBasket, FaSearch, FaLink } from "react-icons/fa";
+import { FaPlane, FaWallet, FaGift, FaHeadset, 
+  FaEye, 
+  FaHeart, FaExchangeAlt, FaStar, 
+  FaShoppingBasket, FaSearch, FaLink, FaFacebookF, 
+  FaTwitter, FaYoutube, FaPinterestP, FaInstagram } from "react-icons/fa";
 import "./Home.css";
+
+/*<div className="admin-button-container">
+              <Link to="/usuarios" className="banner-btn">administrador</Link>
+</div>*/
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -113,9 +121,6 @@ function Home() {
             </form>
           </nav>
         </div>
-        <div className="admin-button-container">
-          <Link to="/usuarios" className="banner-btn">administrador</Link>
-        </div>
       </header>
 
       <div className={`sidebar-menu ${menuOpen ? "active" : ""}`}>
@@ -123,6 +128,9 @@ function Home() {
           <FaTimes className="close-icon" onClick={() => setMenuOpen(false)} />
         </div>
         <ul>
+          <li>
+            <Link to="/usuarios" className="banner-btn">administrador</Link>
+          </li>
           <li><a href="#">Inicio</a></li>
           <li><a href="#">Tienda</a></li>
           <li><a href="#">Aprender sobre acuarismo</a></li>
@@ -139,7 +147,12 @@ function Home() {
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
 
       <section className="banner">
+        {/*<div className="admin-button-container">
+          <Link to="/usuarios" className="banner-btn">administrador</Link>
+        </div>
+        */}
         <div className="content-banner">
+
           <p>Acuariofilia</p>
           <h2>ACUARIOS <br />DE TODO</h2>
           <a href="#">Comprar ahora</a>
@@ -440,84 +453,112 @@ function Home() {
       </main>
 
       <footer className="footer">
+        {/* --- Onda animada --- */}
+        <svg
+          className="footer-wave"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1440 150"
+          preserveAspectRatio="none"
+        >
+          <path
+            fill="url(#grad1)"
+            d="M0,96L60,101.3C120,107,240,117,360,128C480,139,600,149,720,144C840,139,960,117,1080,112C1200,107,1320,117,1380,122.7L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z"
+          >
+            <animate
+              attributeName="d"
+              dur="2s"
+              repeatCount="indefinite"
+              values="
+          M0,96L60,101.3C120,107,240,117,360,128C480,139,600,149,720,144C840,139,960,117,1080,112C1200,107,1320,117,1380,122.7L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z;
+          M0,64L60,74.7C120,85,240,107,360,112C480,117,600,107,720,112C840,117,960,139,1080,138.7C1200,139,1320,117,1380,106.7L1440,96L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z;
+          M0,96L60,101.3C120,107,240,117,360,128C480,139,600,149,720,144C840,139,960,117,1080,112C1200,107,1320,117,1380,122.7L1440,128L1440,0L1380,0C1320,0,1200,0,1080,0C960,0,840,0,720,0C600,0,480,0,360,0C240,0,120,0,60,0L0,0Z
+        "
+            />
+          </path>
+          <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" style={{ stopColor: "#00bfff", stopOpacity: 1 }} />
+              <stop offset="50%" style={{ stopColor: "#0b5e5eff", stopOpacity: 1 }} />
+              <stop offset="100%" style={{ stopColor: "#00bfff", stopOpacity: 1 }} />
+            </linearGradient>
+          </defs>
+        </svg>
+
         <div className="container container-footer">
           <div className="menu-footer">
+            {/* Contact Info */}
             <div className="contact-info">
               <p className="title-footer">Información de Contacto</p>
               <ul>
-                <li>
-                  Dirección: 71 Pennington Lane Vernon Rockville, CT
-                  06066
-                </li>
+                <li>Dirección: La Paz-Bolivia</li>
                 <li>Teléfono: 123-456-7890</li>
                 <li>Fax: 55555300</li>
-                <li>EmaiL: baristas@support.com</li>
+                <li>Email: AcuaKel@gmail.com</li>
               </ul>
               <div className="social-icons">
                 <span className="facebook">
-                  <i className="fa-brands fa-facebook-f"></i>
+                  <FaFacebookF />
                 </span>
                 <span className="twitter">
-                  <i className="fa-brands fa-twitter"></i>
+                  <FaTwitter />
                 </span>
                 <span className="youtube">
-                  <i className="fa-brands fa-youtube"></i>
+                  <FaYoutube />
                 </span>
                 <span className="pinterest">
-                  <i className="fa-brands fa-pinterest-p"></i>
+                  <FaPinterestP />
                 </span>
                 <span className="instagram">
-                  <i className="fa-brands fa-instagram"></i>
+                  <FaInstagram />
                 </span>
               </div>
             </div>
 
+            {/* Información */}
             <div className="information">
               <p className="title-footer">Información</p>
               <ul>
                 <li><a href="#">Acerca de Nosotros</a></li>
                 <li><a href="#">Información Delivery</a></li>
-                <li><a href="#">Politicas de Privacidad</a></li>
+                <li><a href="#">Políticas de Privacidad</a></li>
                 <li><a href="#">Términos y condiciones</a></li>
-                <li><a href="#">Contactános</a></li>
+                <li><a href="#">Contáctanos</a></li>
               </ul>
             </div>
 
+            {/* Mi Cuenta */}
             <div className="my-account">
               <p className="title-footer">Mi cuenta</p>
-
               <ul>
                 <li><a href="#">Mi cuenta</a></li>
-                <li><a href="#">Historial de ordenes</a></li>
+                <li><a href="#">Historial de órdenes</a></li>
                 <li><a href="#">Lista de deseos</a></li>
                 <li><a href="#">Boletín</a></li>
                 <li><a href="#">Reembolsos</a></li>
               </ul>
             </div>
 
+            {/* Newsletter */}
             <div className="newsletter">
               <p className="title-footer">Boletín informativo</p>
-
               <div className="content">
-                <p>
-                  Suscríbete a nuestros boletines ahora y mantente al
-                  día con nuevas colecciones y ofertas exclusivas.
-                </p>
-                <input type="email" placeholder="Ingresa el correo aquí..."/>
-                  <button>Suscríbete</button>
+                <p>Suscríbete a nuestros boletines y recibe ofertas exclusivas.</p>
+                <div className="newsletter-input">
+                  <input type="email" placeholder="Ingresa tu correo..." />
+                  <button>Suscribirse</button>
+                </div>
               </div>
             </div>
           </div>
 
+          {/* Copyright */}
           <div className="copyright">
-            <p>
-              Desarrollado por Programación para el mundo &copy; 2022
-            </p>
-
-            <img src="src/componentes/assets/productos/payment.png" alt="Pagos"/>
+            <p>Adictos al mundo acuatico &copy; 2025</p>
+            <img src="src/componentes/assets/productos/payment.png" alt="Pagos" />
           </div>
         </div>
       </footer>
+
     </>
   );
 }
