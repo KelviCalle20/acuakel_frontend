@@ -1,0 +1,142 @@
+
+/* Formulario de agregar producto - Estilo neón oscuro */
+.form-add-product {
+  background-color: #1a1a1a;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px #00ffe0;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+/* Inputs, textarea y select con fondo oscuro y borde neón */
+.form-add-product input,
+.form-add-product select,
+.form-add-product textarea {
+  background-color: #0d0d0d;
+  color: #fff;
+  border: 2px solid #00ffe0;
+  border-radius: 0.5rem;
+  padding: 0.7rem 1rem;
+  font-size: 1rem;
+  outline: none;
+  transition: 0.3s;
+}
+
+/* Efecto al enfocar */
+.form-add-product input:focus,
+.form-add-product select:focus,
+.form-add-product textarea:focus {
+  border-color: #00b3a6;
+  box-shadow: 0 0 10px #00b3a6;
+}
+
+/* Textarea más grande */
+.form-add-product textarea {
+  grid-column: span 2;
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* Botón agregar producto */
+.form-add-product button {
+  grid-column: span 2;
+  background-color: #00ffe0;
+  color: #000;
+  font-weight: bold;
+  padding: 0.7rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: 0.3s;
+  box-shadow: 0 0 10px #00ffe0, 0 0 20px #00ffe0 inset;
+}
+
+.form-add-product button:hover {
+  background-color: #00b3a6;
+  box-shadow: 0 0 20px #00b3a6, 0 0 30px #00b3a6 inset;
+}
+
+/* Grid de productos */
+.container-product {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 3rem;
+}
+
+
+/* Card producto */
+.card-products {
+  background-color: #1a1a1a;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: 0 0 15px #00ffe0;
+  transition: transform 0.3s;
+}
+
+.card-products:hover {
+  transform: scale(1.05);
+}
+
+.container-img {
+  position: relative;
+}
+
+.container-img img {
+  width: 100%;
+  border-bottom: 2px solid #00ffe0;
+}
+
+.button-groups {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.button-groups span {
+  background-color: #00ffe0;
+  padding: 0.4rem;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.content-card-products {
+  padding: 1rem;
+  color: #0d0d0d;
+}
+
+.star {
+  color: #ffd700;
+}
+
+.add-carts {
+  color: #00ffe0;
+  cursor: pointer;
+  float: right;
+  font-size: 1.2rem;
+}
+
+.prices span {
+  text-decoration: line-through;
+  margin-left: 0.5rem;
+  color: #ff4d4d;
+}
+
+.products-wave {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 300px; /* ajustable según el tamaño que quieras */
+  z-index: 0;
+  border-color: #00b3a6;
+  box-shadow: 0 0 10px #00b3a6;
+}
+
+
+

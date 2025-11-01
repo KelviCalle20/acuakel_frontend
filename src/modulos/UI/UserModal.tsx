@@ -2,50 +2,69 @@ import React, { useState, useEffect } from "react";
 import "./UserModal.css";
 
 interface User {
-  id?: number; // opcional, solo existe al editar
+  id?: number;
   nombre: string;
   apellido_paterno?: string;
   apellido_materno?: string;
   correo: string;
-  contraseña?: string; // solo al crear
+  contrasena?: string;
+  rol?: string;
+  usuarioCreacion?: number;
+  usuarioActualizacion?: number;
 }
 
 interface Props {
-  user?: User | null; // si es null → modo "agregar"
+  user?: User | null;
   closeModal: () => void;
   refreshUsers: () => void;
 }
 
 function UserModal({ user, closeModal, refreshUsers }: Props) {
+  const loggedUserId = Number(localStorage.getItem("userId")) || 1; // se usa 1 como admin inicial
+
   const [formData, setFormData] = useState<User>({
     nombre: "",
     apellido_paterno: "",
     apellido_materno: "",
     correo: "",
-    contraseña: "",
+    contrasena: "",
+    rol: "cliente",
   });
 
   useEffect(() => {
     if (user) {
       setFormData({
+        id: user.id,
         nombre: user.nombre || "",
         apellido_paterno: user.apellido_paterno || "",
         apellido_materno: user.apellido_materno || "",
         correo: user.correo || "",
-        contraseña: "",
+        contrasena: "",
+        rol: user.rol || "cliente",
+      });
+    } else {
+      setFormData({
+        nombre: "",
+        apellido_paterno: "",
+        apellido_materno: "",
+        correo: "",
+        contrasena: "",
+        rol: "cliente",
       });
     }
   }, [user]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const handleSave = async () => {
     try {
+      let response;
+
       if (user && user.id) {
-        // Editar usuario existente
-        await fetch(`http://localhost:4000/api/users/${user.id}`, {
+        // Actualizar usuario existente
+        response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -53,11 +72,13 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
             apellido_paterno: formData.apellido_paterno,
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
+            rol: formData.rol,
+            usuarioActualizacion: loggedUserId,
           }),
         });
       } else {
         // Registrar nuevo usuario
-        await fetch("http://localhost:4000/api/users/register", {
+        response = await fetch("http://localhost:4000/api/users/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -65,15 +86,26 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
             apellido_paterno: formData.apellido_paterno,
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
-            contraseña: formData.contraseña,
+            contrasena: formData.contrasena,
+            rol: "cliente",
+            usuarioCreacion: loggedUserId,
           }),
         });
       }
 
-      await refreshUsers();
-      closeModal();
+      //Validar respuesta
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error del servidor:", errorText);
+        alert("No se pudo guardar el usuario. Verifica los datos o el servidor.");
+        return;
+      }
+
+      await refreshUsers(); // refresca la lista
+      closeModal(); // cierra el modal 
     } catch (err) {
       console.error("Error al guardar usuario:", err);
+      alert("Error al conectar con el servidor.");
     }
   };
 
@@ -114,12 +146,22 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         {!user?.id && (
           <input
             type="password"
-            name="contraseña"
-            value={formData.contraseña || ""}
+            name="contrasena"
+            value={formData.contrasena || ""}
             onChange={handleChange}
             placeholder="Contraseña"
           />
         )}
+
+        <select
+          name="rol"
+          value={formData.rol || "cliente"}
+          onChange={handleChange}
+        >
+          <option value="cliente">Cliente</option>
+          <option value="vendedor">Vendedor</option>
+          <option value="administrador">Administrador</option>
+        </select>
 
         <div className="modal-actions">
           <button onClick={handleSave} className="btn-save">
@@ -135,10 +177,3 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
 }
 
 export default UserModal;
-
-
-
-
-
-
-

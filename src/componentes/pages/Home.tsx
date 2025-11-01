@@ -66,7 +66,7 @@ function Home() {
             <div className="container-logo">
               <i className="fa-solid fa-mug-hot"><FaFish /></i>
               <h1 className="logo">
-                <a href="/">ACUARIOFILIA</a>
+                <a href="https://share.google/vfW41Uxa5gkEphhOO">ACUARIOFILIA</a>
               </h1>
             </div>
 
@@ -74,7 +74,7 @@ function Home() {
               {!userName ? (
                 <Link to="/login" className="login-section">
                   <FaUser className="fa-user" />
-                  <span className="login-text">Iniciar sesión</span>
+                  {/*<span className="login-text">Iniciar sesión</span>*/}
                 </Link>
               ) : (
                 <div className="user-section" ref={userMenuRef}>
@@ -106,11 +106,11 @@ function Home() {
           <nav className="navbar container">
             <i className="fa-solid fa-bars"></i>
             <ul className="menu">
-              <li><a href="#">Inicio</a></li>
-              <li><a href="#">Tienda</a></li>
-              <li><a href="#">Aprender sobre acuarismo</a></li>
-              <li><a href="#">productos</a></li>
-              <li><a href="#">Galeria Multimedia</a></li>
+              <li><a href="#1">Inicio</a></li>
+              <li><a href="#2">Tienda</a></li>
+              <li><a href="#3">Aprender sobre acuarismo</a></li>
+              <li><Link to="/productos">Productos</Link></li>
+              <li><a href="#5">Galeria Multimedia</a></li>
             </ul>
 
             <form className="search-form">
@@ -129,7 +129,10 @@ function Home() {
         </div>
         <ul>
           <li>
-            <Link to="/usuarios" className="banner-btn">administrador</Link>
+            <Link to="/usuarios" className="banner-btn">admin-Usuarios</Link>
+          </li>
+          <li>
+            <Link to="/bandeja-productos" className="banner-btn">admin-Productoa</Link>
           </li>
           <li><a href="#">Inicio</a></li>
           <li><a href="#">Tienda</a></li>
@@ -153,9 +156,9 @@ function Home() {
         */}
         <div className="content-banner">
 
-          <p>Acuariofilia</p>
+          {/*<p>Acuariofilia</p>*/}
           <h2>ACUARIOS <br />DE TODO</h2>
-          <a href="#">Comprar ahora</a>
+          <a href="/productos">Comprar ahora</a>
         </div>
       </section>
 
@@ -196,8 +199,8 @@ function Home() {
         </section>
 
         {/* SECCIÓN DE CATEGORÍAS */}
-        <section className="container top-categories">
-          <h1 className="heading-1">Mejores Categorías</h1>
+        <section className="container top-categories" >
+          <h1 className="heading-1" id="2">Mejores Categorías</h1>
           <div className="container-categories">
             <div className="card-category category-moca">
               <p>Filtros de Mochila</p>
@@ -215,7 +218,7 @@ function Home() {
         </section>
 
         {/* SECCIÓN DE PRODUCTOS */}
-        <section className="container top-products">
+        <section className="container top-products" id="4">
           <h1 className="heading-1">Mejores Productos</h1>
 
           <div className="container-options">
@@ -306,7 +309,7 @@ function Home() {
         </section>
 
         {/* GALERÍA */}
-        <section className="gallery">
+        <section className="gallery" id="3">
           <img src="src/componentes/assets/productos/Galeria1.jpg" alt="Gallery Img1" className="gallery-img-1" />
           <img src="src/componentes/assets/productos/Galeria2.jpg" alt="Gallery Img2" className="gallery-img-2" />
           <img src="src/componentes/assets/productos/Galeria3.jpg" alt="Gallery Img3" className="gallery-img-3" />
@@ -398,7 +401,7 @@ function Home() {
         </section>
 
         {/* BLOGS */}
-        <section className="container blogs">
+        <section className="container blogs" id="5">
           <h1 className="heading-1">Últimos Blogs</h1>
           <div className="container-blogs">
             <div className="card-blog">

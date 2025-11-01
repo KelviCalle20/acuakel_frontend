@@ -6,13 +6,13 @@ import { FaUser, FaLock } from "react-icons/fa";
 
 const Login = () => {
   const [correo, setEmail] = useState<string>('');
-  const [contraseña, setPassword] = useState<string>('');
+  const [contrasena, setPassword] = useState<string>('');
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:4000/api/users/login', { correo, contraseña });
+      const res = await axios.post('http://localhost:4000/api/users/login', { correo, contrasena });
       //alert(res.data.message);
       const userName = res.data.user?.nombre || res.data.user?.nombre || '';
       if (userName) {
@@ -50,13 +50,13 @@ const Login = () => {
           <div className='input-box'>
             <input
               type="password"
-              id="contraseña"
+              id="contrasena"
               required
-              value={contraseña}
+              value={contrasena}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="contraseña">Contraseña</label>
+            <label htmlFor="contrasena">Contraseña</label>
             <FaLock className='icon' />
           </div>
 

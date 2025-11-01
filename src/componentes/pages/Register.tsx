@@ -9,14 +9,14 @@ const Register = () => {
   const [apellido_paterno, setAp] = useState<string>(''); // nuevo campo
   const [apellido_materno, setAm] = useState<string>(''); // nuevo campo
   const [correo, setEmail] = useState<string>('');
-  const [contraseña, setPassword] = useState<string>('');
+  const [contrasena, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>(''); // nuevo campo
   const navigate = useNavigate(); // para redirigir al login
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (contraseña !== confirmPassword) {
+    if (contrasena !== confirmPassword) {
       alert('Las contraseñas no coinciden');
       return;
     }
@@ -27,7 +27,9 @@ const Register = () => {
         apellido_paterno,
         apellido_materno,
         correo,
-        contraseña,
+        contrasena,
+        rol: "cliente",  
+        usuarioCreacion: null,
       });
       alert(res.data.message); // mensaje de éxito
       navigate('/login'); // redirige al login
@@ -46,7 +48,7 @@ const Register = () => {
     <div className='register-page'>
       <div className="wrapper-register">
         <form onSubmit={handleRegister}>
-          <h1>Registro</h1>
+          <h1>REGISTRO</h1>
 
           <div className="input-box">
             <input
@@ -105,13 +107,13 @@ const Register = () => {
           <div className="input-box">
             <input
               type="password"
-              id="contraseña"
+              id="contrasena"
               required
-              value={contraseña}
+              value={contrasena}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete='off'
             />
-            <label htmlFor="contraseña">Contraseña</label>
+            <label htmlFor="contrasena">Contraseña</label>
             <FaLock className="icon" />
           </div>
 

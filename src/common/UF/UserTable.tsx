@@ -11,6 +11,9 @@ interface User {
   apellido_materno: string;
   correo: string;
   estado: boolean;
+  rol?: string;           
+  usuarioCreacion?: number;
+  usuarioActualizacion?: number;
 }
 
 export default function UserTable() {
@@ -93,7 +96,7 @@ export default function UserTable() {
             <FaSearch className="search-icon" />
           </div>
           <button className="add-button" onClick={() => openModal()}>
-            <FaUserPlus />
+            <FaUserPlus /> agregar
           </button>
         </div>
 
@@ -104,6 +107,7 @@ export default function UserTable() {
               <th>Apellido Paterno</th>
               <th>Apellido Materno</th>
               <th>Correo</th>
+              <th>Rol</th>
               <th>Estado</th>
               <th>Acciones</th>
             </tr>
@@ -116,6 +120,7 @@ export default function UserTable() {
                   <td>{user.apellido_paterno}</td>
                   <td>{user.apellido_materno}</td>
                   <td>{user.correo}</td>
+                  <td>{user.rol}</td>
                   <td
                     className={user.estado ? "estado-activo" : "estado-inactivo"}
                   >
