@@ -11,7 +11,7 @@ interface User {
   apellido_materno: string;
   correo: string;
   estado: boolean;
-  rol?: string;           
+  rol?: string;
   usuarioCreacion?: number;
   usuarioActualizacion?: number;
 }

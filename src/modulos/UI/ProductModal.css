@@ -9,6 +9,8 @@
   justify-content: center;
   align-items: center;
   z-index: 999;
+  overflow-y: auto; /* permite scroll si el contenido es muy grande */
+  padding: 20px; /* para que no toque los bordes en pantallas pequeñas */
 }
 
 .product-modal {
@@ -16,7 +18,10 @@
   padding: 25px;
   border-radius: 10px;
   width: 420px;
+  max-width: 100%; /* responsive */
   box-shadow: 0 0 20px rgba(0, 255, 255, 0.3);
+  display: flex;
+  flex-direction: column;
 }
 
 .product-modal h2 {
@@ -34,12 +39,36 @@
   border-radius: 6px;
   border: 1px solid #ccc;
   font-size: 15px;
+  box-sizing: border-box;
+}
+
+/* ====== Vista previa de imagen ====== */
+.image-preview {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+  max-height: 200px; /* limita altura */
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.image-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain; /* mantiene proporciones y no distorsiona */
+}
+
+/* ====== Campo de subida de archivo ====== */
+.file-upload {
+  margin: 10px 0;
 }
 
 .product-modal-actions {
   display: flex;
   justify-content: space-around;
   margin-top: 15px;
+  flex-wrap: wrap; /* para pantallas pequeñas */
 }
 
 .product-btn-save {
@@ -69,3 +98,4 @@
 .product-btn-cancel:hover {
   background: #d32f2f;
 }
+

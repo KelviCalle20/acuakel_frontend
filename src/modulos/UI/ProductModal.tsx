@@ -36,6 +36,8 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
         categoria_id: undefined,
         imagen_url: "",
     });
+    const [file, setFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string>("");
 
     // Cargar datos al editar
     useEffect(() => {
@@ -49,6 +51,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 categoria_id: producto.categoria_id,
                 imagen_url: producto.imagen_url || "",
             });
+            setPreview(producto.imagen_url || "");
         } else {
             setFormData({
                 nombre: "",
@@ -58,6 +61,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 categoria_id: undefined,
                 imagen_url: "",
             });
+            setPreview("");
         }
     }, [producto]);
 
@@ -69,6 +73,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
             .catch((err) => console.error("Error al cargar categorías:", err));
     }, []);
 
+    // Manejar cambios del formulario
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
@@ -79,8 +84,35 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
         });
     };
 
+    // Manejar selección de imagen desde el PC
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const selectedFile = e.target.files?.[0];
+        if (selectedFile) {
+            setFile(selectedFile);
+            setPreview(URL.createObjectURL(selectedFile)); // vista previa inmediata
+        }
+    };
+
     const handleSave = async () => {
         try {
+            let imageUrl = formData.imagen_url;
+
+            // 🔹 Si el usuario seleccionó un archivo, primero lo subimos
+            if (file) {
+                const imageData = new FormData();
+                imageData.append("file", file);
+
+                const uploadRes = await fetch("http://localhost:4000/api/upload", {
+                    method: "POST",
+                    body: imageData,
+                });
+
+                if (!uploadRes.ok) throw new Error("Error al subir imagen");
+                const uploadData = await uploadRes.json();
+                imageUrl = uploadData.url; // el backend debe devolver { url: "..." }
+            }
+
+            // 🔹 Enviar los datos del producto
             const url = producto && producto.id
                 ? `http://localhost:4000/api/products/${producto.id}`
                 : "http://localhost:4000/api/products";
@@ -89,6 +121,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 
             const body = JSON.stringify({
                 ...formData,
+                imagen_url: imageUrl,
                 usuarioCreacion: producto?.id ? undefined : loggedUserId,
                 usuarioActualizacion: producto?.id ? loggedUserId : undefined,
             });
@@ -167,6 +200,28 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                     ))}
                 </select>
 
+                {/* Campo para URL de imagen */}
+                <input
+                    type="text"
+                    name="imagen_url"
+                    placeholder="URL de la imagen (opcional)"
+                    value={formData.imagen_url}
+                    onChange={handleChange}
+                />
+
+                {/* Opción para subir desde PC */}
+                <div className="file-upload">
+                    <label>Subir imagen desde tu computadora:</label>
+                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                </div>
+
+                {/* Vista previa */}
+                {preview && (
+                    <div className="image-preview">
+                        <img src={preview} alt="Vista previa" />
+                    </div>
+                )}
+
                 <div className="product-modal-actions">
                     <button onClick={handleSave} className="product-btn-save">
                         {producto?.id ? "Actualizar" : "Registrar"}
@@ -181,3 +236,4 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 }
 
 export default ProductModal;
+
