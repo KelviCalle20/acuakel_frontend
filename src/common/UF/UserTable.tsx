@@ -23,7 +23,19 @@ export default function UserTable() {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [menuOpen, setBandejaOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
+
+  // usersPerPage con persistencia en localStorage
+  const [usersPerPage, setUsersPerPage] = useState<number>(() => {
+    const saved = localStorage.getItem("usersPerPage");
+    return saved ? Number(saved) : 10;
+  });
+
+  // Guardar la preferencia cuando cambie
+  useEffect(() => {
+    localStorage.setItem("usersPerPage", usersPerPage.toString());
+  }, [usersPerPage]);
 
   const fetchUsers = async () => {
     try {
@@ -51,7 +63,19 @@ export default function UserTable() {
         u.correo.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
+    setCurrentPage(1); // reset a la página 1 al filtrar
   }, [searchTerm, users]);
+
+  // Paginación
+  const indexOfLast = currentPage * usersPerPage;
+  const indexOfFirst = indexOfLast - usersPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(filteredUsers.length / usersPerPage);
+
+  const changePage = (page: number) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+  };
 
   const openModal = (user?: User) => {
     setSelectedUser(
@@ -113,8 +137,8 @@ export default function UserTable() {
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map((user) => (
+            {currentUsers.length > 0 ? (
+              currentUsers.map((user) => (
                 <tr key={user.id}>
                   <td>{user.nombre}</td>
                   <td>{user.apellido_paterno}</td>
@@ -161,11 +185,42 @@ export default function UserTable() {
               ))
             ) : (
               <tr>
-                <td colSpan={6}>No se encontraron usuarios</td>
+                <td colSpan={7}>No se encontraron usuarios</td>
               </tr>
             )}
           </tbody>
         </table>
+
+        {/* Paginación */}
+        <div className="user-pagination-container">
+          <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
+            Anterior
+          </button>
+          {[...Array(totalPages)].map((_, idx) => (
+            <button
+              key={idx + 1}
+              className={currentPage === idx + 1 ? "active-page" : ""}
+              onClick={() => changePage(idx + 1)}
+            >
+              {idx + 1}
+            </button>
+          ))}
+          <button onClick={() => changePage(currentPage + 1)} disabled={currentPage === totalPages}>
+            Siguiente
+          </button>
+
+          <select
+            value={usersPerPage}
+            onChange={(e) => {
+              setUsersPerPage(Number(e.target.value));
+              setCurrentPage(1);
+            }}
+          >
+            <option value={5}>5</option>
+            <option value={10}>10</option>
+            <option value={20}>20</option>
+          </select>
+        </div>
 
         {isModalOpen && selectedUser && (
           <UserModal
@@ -175,6 +230,7 @@ export default function UserTable() {
           />
         )}
       </div>
+
       <div className={`sidebar-bandeja ${menuOpen ? "active" : ""}`}>
         <div className="close-areaBandeja">
           <FaTimes className="close-iconBandeja" onClick={() => setBandejaOpen(false)} />
@@ -192,4 +248,6 @@ export default function UserTable() {
     </div>
   );
 }
+
+
 

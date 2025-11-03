@@ -1,0 +1,356 @@
+/* Fondo general */
+.product-table-page {
+  min-height: 100vh;
+  background: #111;
+  color: #f0f0f0;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Navbar */
+.product-navbar-tray {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e1e1e;
+  padding: 15px 30px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.product-navbar-tray h2 {
+  margin: 0;
+  color: #00bcd4;
+  font-weight: 600;
+}
+
+.product-exit-button {
+  background: #e53935;
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.product-exit-button:hover {
+  background: #c62828;
+}
+
+/* Contenedor principal */
+.product-table-container {
+  margin: 40px auto;
+  width: 100%;
+  max-width: none;
+  background: #1a1a1a;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
+}
+
+/* Encabezado */
+.product-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Búsqueda */
+.product-search-container {
+  display: flex;
+  align-items: center;
+  background: #2a2a2a;
+  border-radius: 8px;
+  padding: 5px 10px;
+}
+
+.product-search-input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #fff;
+  padding: 6px;
+  width: 200px;
+}
+
+.product-search-icon {
+  color: #00bcd4;
+  font-size: 18px;
+}
+
+/* Botón agregar */
+.product-add-button {
+  background: #00bcd4;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.product-add-button:hover {
+  background: #0097a7;
+}
+
+/* Tabla */
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.product-table th,
+.product-table td {
+  padding: 12px 10px;
+  text-align: left;
+  border-bottom: 1px solid #333;
+}
+
+.product-table th {
+  color: #00bcd4;
+}
+
+.product-table tr:hover {
+  background: rgba(0, 188, 212, 0.1);
+}
+
+.product-edit-btn {
+  background: none;
+  color: #2196f3;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 20px;
+  transition: 0.3s;
+}
+
+.product-edit-btn:hover {
+  background-color: #1976d2;
+  box-shadow: 0 0 5px #1976d2;
+}
+
+/* Switch */
+.product-switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+  margin-left: 10px;
+}
+
+.product-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.product-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #dc3545;
+  box-shadow: 0 0 5px #dc3545;
+  transition: .4s;
+  border-radius: 34px;
+}
+
+.product-slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 2px;
+  bottom: 2px;
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+.product-switch input:checked + .product-slider {
+  background-color: #00ffff;
+  box-shadow: 0 0 5px #00ffff;
+}
+
+.product-switch input:checked + .product-slider:before {
+  transform: translateX(20px);
+}
+
+.product-estado-activo {
+  color: #28a745;
+  font-weight: 500;
+}
+
+.product-estado-inactivo {
+  color: #dc3545;
+  font-weight: 500;
+}
+
+/* Sidebar */
+.product-bandeja-toggle {
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #333;
+  margin-right: 10px;
+  background: none;
+  border: none;
+  outline: none;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.product-bandeja-toggle:hover {
+  transform: scale(1.1);
+  color: #555;
+}
+
+.product-sidebar-bandeja {  
+  position: fixed;
+  top: 0;
+  left: -260px;
+  width: 250px;
+  height: 100%;
+  background-color: #1f1f1f;
+  color: #fff;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  padding-top: 60px;
+  box-shadow: 0 0 15px #6f00ff;
+}
+
+.product-sidebar-bandeja.active {
+  left: 0;
+}
+
+.product-sidebar-bandeja ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.product-sidebar-bandeja ul li {
+  padding: 15px 25px;
+}
+
+.product-sidebar-bandeja ul li a {
+  color: #00ffff;
+  text-decoration: none;
+  font-size: 1.1rem;
+  display: block;
+  transition: background 0.3s, padding-left 0.2s;
+  text-shadow: 0 0 5px #00ffff, 0 0 10px #00ffff;
+}
+
+.product-sidebar-bandeja ul li a:hover {
+  color: #fff;
+  padding-left: 30px;
+  text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+}
+
+.product-close-areaBandeja {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+}
+
+.product-close-iconBandeja {
+  color: #00ffff;
+  font-size: 1.3rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.product-close-iconBandeja:hover {
+  transform: scale(1.2);
+}
+
+.product-overlay-two {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(140, 0, 255, 0.2);
+  z-index: 900;
+}
+
+/* Contenedor de paginación */
+.product-pagination-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+/* Contenedor de paginación centrado */
+.product-pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 20px; /* opcional, para separar de la tabla */
+}
+
+/* Botones de paginación */
+.product-pagination-container button {
+  background: #1e1e1e;
+  color: #00ffff;
+  border: 1px solid #00ffff;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.product-pagination-container button:hover {
+  background: #00ffff;
+  color: #111;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+.product-pagination-container button:disabled {
+  background: #333;
+  border-color: #555;
+  color: #555;
+  cursor: not-allowed;
+}
+
+/* Página activa */
+.product-pagination-container .active-page {
+  background: #00ffff;
+  color: #111;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+/* Selector de límite de productos */
+.product-pagination-container select {
+  background: #1e1e1e;
+  color: #00ffff;
+  border: 1px solid #00ffff;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.product-pagination-container select:hover {
+  background: #00ffff;
+  color: #111;
+  box-shadow: 0 0 10px #00ffff;
+}
+
+

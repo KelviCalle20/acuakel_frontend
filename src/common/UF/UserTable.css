@@ -283,3 +283,56 @@ input:checked+.slider:before {
 	background: rgba(140, 0, 255, 0.2);
 	z-index: 900;
 }
+
+/* Paginación exclusiva para UserTable */
+.user-pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+  flex-wrap: wrap;
+}
+
+.user-pagination-container button {
+  background: #00bcd4;
+  color: #fff;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.user-pagination-container button:hover {
+  background: #0097a7;
+  box-shadow: 0 0 8px #00bcd4;
+}
+
+.user-pagination-container button:disabled {
+  background: #555;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.user-pagination-container .active-page {
+  background: #00ffe0;
+  color: #111;
+  box-shadow: 0 0 10px #00ffe0;
+}
+
+.user-pagination-container select {
+  background: #2a2a2a;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.user-pagination-container select:hover {
+  background: #333;
+}

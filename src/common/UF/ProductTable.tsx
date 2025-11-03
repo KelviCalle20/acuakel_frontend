@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { FaSearch, FaBoxOpen, FaSignOutAlt, FaPen, FaBars, FaTimes } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import ProductModal from "../../modulos/UI/ProductModal";
-import "./UserTable.css";
+import "./ProductTable.css"; // Ahora CSS independiente
 
 interface Producto {
     id: number;
@@ -12,7 +12,7 @@ interface Producto {
     stock: number;
     imagen_url?: string;
     categoria_id?: number;
-    categoria?: string; // Nueva propiedad para mostrar nombre de categoría
+    categoria?: string;
     estado: boolean;
 }
 
@@ -23,7 +23,19 @@ export default function ProductTable() {
     const [selectedProduct, setSelectedProduct] = useState<Producto | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [menuOpen, setBandejaOpen] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
+
+    // productsPerPage con persistencia en localStorage
+    const [productsPerPage, setProductsPerPage] = useState<number>(() => {
+        const saved = localStorage.getItem("productsPerPage");
+        return saved ? Number(saved) : 20;
+    });
+
+    // Guardar la preferencia cuando cambie
+    useEffect(() => {
+        localStorage.setItem("productsPerPage", productsPerPage.toString());
+    }, [productsPerPage]);
 
     const fetchProductos = async () => {
         try {
@@ -49,7 +61,18 @@ export default function ProductTable() {
                 p.descripcion.toLowerCase().includes(searchTerm.toLowerCase())
         );
         setFilteredProductos(filtered);
+        setCurrentPage(1);
     }, [searchTerm, productos]);
+
+    const indexOfLast = currentPage * productsPerPage;
+    const indexOfFirst = indexOfLast - productsPerPage;
+    const currentProducts = filteredProductos.slice(indexOfFirst, indexOfLast);
+    const totalPages = Math.ceil(filteredProductos.length / productsPerPage);
+
+    const changePage = (page: number) => {
+        if (page < 1 || page > totalPages) return;
+        setCurrentPage(page);
+    };
 
     const openModal = (product?: Producto) => {
         setSelectedProduct(
@@ -78,37 +101,37 @@ export default function ProductTable() {
     };
 
     return (
-        <div className="user-table-page">
-            <nav className="navbar-tray">
+        <div className="product-table-page">
+            <nav className="product-navbar-tray">
                 <div className="navbar-left">
-                    <FaBars className="bandeja-toggle" onClick={() => setBandejaOpen(!menuOpen)} />
+                    <FaBars className="product-bandeja-toggle" onClick={() => setBandejaOpen(!menuOpen)} />
                     <h2>Gestión de Productos</h2>
                 </div>
                 <div className="navbar-right">
-                    <button className="exit-button" onClick={handleExit}>
+                    <button className="product-exit-button" onClick={handleExit}>
                         <FaSignOutAlt />
                     </button>
                 </div>
             </nav>
 
-            <div className="user-table-container">
-                <div className="table-header">
-                    <div className="search-container">
+            <div className="product-table-container">
+                <div className="product-table-header">
+                    <div className="product-search-container">
                         <input
                             type="text"
                             placeholder="Buscar producto..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            className="search-input"
+                            className="product-search-input"
                         />
-                        <FaSearch className="search-icon" />
+                        <FaSearch className="product-search-icon" />
                     </div>
-                    <button className="add-button" onClick={() => openModal()}>
+                    <button className="product-add-button" onClick={() => openModal()}>
                         <FaBoxOpen /> agregar
                     </button>
                 </div>
 
-                <table className="user-table">
+                <table className="product-table">
                     <thead>
                         <tr>
                             <th>Nombre</th>
@@ -122,8 +145,8 @@ export default function ProductTable() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredProductos.length > 0 ? (
-                            filteredProductos.map((producto) => (
+                        {currentProducts.length > 0 ? (
+                            currentProducts.map((producto) => (
                                 <tr key={producto.id}>
                                     <td>{producto.nombre || "Sin nombre"}</td>
                                     <td>{producto.descripcion || "Sin descripción"}</td>
@@ -141,14 +164,14 @@ export default function ProductTable() {
                                         )}
                                     </td>
                                     <td>{producto.categoria || "Sin categoría"}</td>
-                                    <td className={producto.estado ? "estado-activo" : "estado-inactivo"}>
+                                    <td className={producto.estado ? "product-estado-activo" : "product-estado-inactivo"}>
                                         {producto.estado ? "ACTIVO" : "INACTIVO"}
                                     </td>
                                     <td>
-                                        <button className="edit-btn" onClick={() => openModal(producto)}>
+                                        <button className="product-edit-btn" onClick={() => openModal(producto)}>
                                             <FaPen />
                                         </button>
-                                        <label className="switch">
+                                        <label className="product-switch">
                                             <input
                                                 type="checkbox"
                                                 checked={producto.estado}
@@ -168,7 +191,7 @@ export default function ProductTable() {
                                                     }
                                                 }}
                                             />
-                                            <span className="slider round"></span>
+                                            <span className="product-slider round"></span>
                                         </label>
                                     </td>
                                 </tr>
@@ -181,6 +204,37 @@ export default function ProductTable() {
                     </tbody>
                 </table>
 
+                {/* Paginación */}
+                <div className="product-pagination-container">
+                    <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
+                        Anterior
+                    </button>
+                    {[...Array(totalPages)].map((_, idx) => (
+                        <button
+                            key={idx + 1}
+                            className={currentPage === idx + 1 ? "active-page" : ""}
+                            onClick={() => changePage(idx + 1)}
+                        >
+                            {idx + 1}
+                        </button>
+                    ))}
+                    <button onClick={() => changePage(currentPage + 1)} disabled={currentPage === totalPages}>
+                        Siguiente
+                    </button>
+
+                    <select
+                        value={productsPerPage}
+                        onChange={(e) => {
+                            setProductsPerPage(Number(e.target.value));
+                            setCurrentPage(1);
+                        }}
+                    >
+                        <option value={5}>5</option>
+                        <option value={10}>10</option>
+                        <option value={20}>20</option>
+                    </select>
+                </div>
+
                 {isModalOpen && selectedProduct && (
                     <ProductModal
                         producto={selectedProduct}
@@ -190,9 +244,9 @@ export default function ProductTable() {
                 )}
             </div>
 
-            <div className={`sidebar-bandeja ${menuOpen ? "active" : ""}`}>
-                <div className="close-areaBandeja">
-                    <FaTimes className="close-iconBandeja" onClick={() => setBandejaOpen(false)} />
+            <div className={`product-sidebar-bandeja ${menuOpen ? "active" : ""}`}>
+                <div className="product-close-areaBandeja">
+                    <FaTimes className="product-close-iconBandeja" onClick={() => setBandejaOpen(false)} />
                 </div>
                 <ul>
                     <li><a href="#">Inicio</a></li>
@@ -204,9 +258,12 @@ export default function ProductTable() {
                 </ul>
             </div>
 
-            {menuOpen && <div className="overlay-two" onClick={() => setBandejaOpen(false)} />}
+            {menuOpen && <div className="product-overlay-two" onClick={() => setBandejaOpen(false)} />}
         </div>
     );
 }
+
+
+
 
 
