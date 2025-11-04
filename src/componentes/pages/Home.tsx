@@ -93,7 +93,7 @@ function Home() {
               )}
 
               <div className="content-shopping-cart">
-                <Link to="/cart">
+                <Link to="/carrito">
                   <FaShoppingCart className="fa-user" />
                 </Link>
               </div>

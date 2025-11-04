@@ -6,8 +6,8 @@ import UsersPage from './common/UF/UsersPage';
 import ProductPage from './common/UF/ProductPage';
 import ResetPassword from "./componentes/pages/ResetPassword";
 import NewPassword from "./componentes/pages/NewPassword";
-import Cart from './componentes/pages/Cart';
 import Productos from './componentes/pages/Productos';
+import Carrito from './componentes/pages/Carrito';
 
 function App() {
   return (
@@ -17,7 +17,7 @@ function App() {
         <Route path="/Usuarios" element={<UsersPage />} />
         <Route path="/bandeja-productos" element={<ProductPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/cart" element={<Cart />} />
+        <Route path="/carrito" element={<Carrito />} />
         <Route path="/productos" element={<Productos />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-password/:token" element={<NewPassword />} />

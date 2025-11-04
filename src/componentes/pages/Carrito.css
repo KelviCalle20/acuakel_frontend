@@ -1,0 +1,142 @@
+/* Fondo general */
+.cart-page {
+  background-color: #0d0d0d;
+  color: #e0e0e0;
+  min-height: 100vh;
+  padding: 2.5cm 0; /* margen vertical tipo Steam */
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centra el título y el contenedor */
+  box-sizing: border-box;
+}
+
+/* Título centrado */
+.cart-page h1 {
+  text-align: center;
+  color: #00f0ff;
+  text-shadow: 0 0 10px #00f0ff, 0 0 20px #00f0ff;
+  margin-bottom: 2rem;
+}
+
+/* Contenedor principal */
+.cart-container {
+  display: flex;
+  flex-wrap: nowrap; /* no se quiebra en varias líneas */
+  gap: 2rem;
+  max-width: 1200px;
+  width: 90%;
+  align-items: flex-start; /* alinea arriba los items de la izquierda y resumen */
+}
+
+/* Lista de productos (izquierda) */
+.cart-list {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Item individual */
+.cart-item {
+  display: flex;
+  background-color: #1a1a1a;
+  border: 1px solid #00f0ff;
+  border-radius: 12px;
+  padding: 1rem;
+  gap: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.cart-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px #00f0ff;
+}
+
+/* Imagen del producto */
+.cart-item img {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #00f0ff;
+}
+
+/* Info del producto */
+.cart-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.cart-info h3 {
+  color: #00f0ff;
+  text-shadow: 0 0 5px #00f0ff;
+  margin: 0;
+}
+
+/* Botón eliminar */
+.btn-remove {
+  background-color: #ff0055;
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.btn-remove:hover {
+  background-color: #ff3399;
+  box-shadow: 0 0 10px #ff3399;
+}
+
+/* Resumen del carrito (derecha) */
+.cart-summary {
+  flex: 1;
+  background-color: #1a1a1a;
+  border: 1px solid #00f0ff;
+  border-radius: 12px;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: center;
+  min-width: 250px; /* evita que se haga muy pequeño */
+}
+
+.cart-summary h3 {
+  color: #00f0ff;
+  text-shadow: 0 0 10px #00f0ff;
+}
+
+.cart-summary p {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Botones pagar y vaciar */
+.btn-pay,
+.btn-clear {
+  background-color: #00f0ff;
+  color: #0d0d0d;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+  margin-top: 0.5rem;
+}
+
+.btn-pay:hover,
+.btn-clear:hover {
+  background-color: #00ffff;
+  box-shadow: 0 0 15px #00ffff;
+}
+
+
+
+
+
