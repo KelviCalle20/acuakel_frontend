@@ -1,14 +1,32 @@
 /* Fondo general */
 .cart-page {
-  background-color: #0d0d0d;
+  background: linear-gradient(270deg, #0a0a1a, #001f33, #004d99, #003300 );
+  background-size: 800% 800%;
+  animation: darkNeonBackground 20s ease infinite;
   color: #e0e0e0;
   min-height: 100vh;
-  padding: 2.5cm 0; /* margen vertical tipo Steam */
+  padding: 2.5cm 1rem;
+  /* padding horizontal más pequeño en móviles */
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
-  align-items: center; /* centra el título y el contenedor */
+  align-items: center;
   box-sizing: border-box;
+}
+
+/* Animación de gradiente en movimiento */
+@keyframes darkNeonBackground {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
 }
 
 /* Título centrado */
@@ -22,11 +40,12 @@
 /* Contenedor principal */
 .cart-container {
   display: flex;
-  flex-wrap: nowrap; /* no se quiebra en varias líneas */
+  flex-wrap: nowrap;
+  /* no se quiebra en varias líneas */
   gap: 2rem;
   max-width: 1200px;
   width: 90%;
-  align-items: flex-start; /* alinea arriba los items de la izquierda y resumen */
+  align-items: flex-start;
 }
 
 /* Lista de productos (izquierda) */
@@ -103,9 +122,10 @@
   flex-direction: column;
   gap: 1rem;
   text-align: center;
-  min-width: 250px; /* evita que se haga muy pequeño */
+  min-width: 250px;
 }
 
+/* Titulos del resumen */
 .cart-summary h3 {
   color: #00f0ff;
   text-shadow: 0 0 10px #00f0ff;
@@ -136,7 +156,60 @@
   box-shadow: 0 0 15px #00ffff;
 }
 
+/* --------------------- MEDIA QUERIES RESPONSIVE --------------------- */
 
+/* Tablets (ancho <= 1024px) */
+@media (max-width: 1024px) {
+  .cart-container {
+    flex-wrap: wrap;
+    /* permitir que el resumen baje */
+    justify-content: center;
+    gap: 1.5rem;
+  }
 
+  .cart-summary {
+    min-width: 100%;
+    max-width: 400px;
+  }
+}
 
+/* Móviles (ancho <= 768px) */
+@media (max-width: 768px) {
+  .cart-container {
+    flex-direction: column;
+    /* productos arriba, resumen abajo */
+    width: 95%;
+  }
 
+  .cart-list {
+    width: 100%;
+  }
+
+  .cart-summary {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .cart-item img {
+    width: 100px;
+    height: 100px;
+  }
+
+  .cart-info h3 {
+    font-size: 1rem;
+  }
+
+  .cart-summary h3 {
+    font-size: 1.1rem;
+  }
+
+  .cart-summary p {
+    font-size: 1rem;
+  }
+}

@@ -1,20 +1,23 @@
+
 import { useState, useEffect } from "react";
+import PagoModal from "../../modulos/UI/PagoModal";
 import "./Carrito.css";
 
 interface ProductoCarrito {
   detalle_id: number;
   producto_id: number;
   nombre: string;
-  precio: number | string; // puede venir como string desde la DB
+  precio: number | string;
   imagen_url: string;
   cantidad: number;
-  subtotal: number | string; // puede venir como string desde la DB
+  subtotal: number | string;
 }
 
 export default function Carrito() {
   const [items, setItems] = useState<ProductoCarrito[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showPago, setShowPago] = useState(false);
 
   const usuarioId = Number(localStorage.getItem("userId")) || 1;
 
@@ -28,10 +31,7 @@ export default function Carrito() {
       if (!res.ok) throw new Error("Error al cargar el carrito");
 
       const data = await res.json();
-
-      if (!Array.isArray(data)) {
-        throw new Error("Datos del carrito inválidos");
-      }
+      if (!Array.isArray(data)) throw new Error("Datos del carrito inválidos");
 
       setItems(data);
     } catch (err: unknown) {
@@ -57,9 +57,7 @@ export default function Carrito() {
         `http://localhost:4000/api/carrito/remove/${detalleId}`,
         { method: "DELETE" }
       );
-
       if (!res.ok) throw new Error("No se pudo eliminar el producto");
-
       fetchCarrito();
     } catch (err: unknown) {
       console.error(err);
@@ -77,9 +75,7 @@ export default function Carrito() {
         `http://localhost:4000/api/carrito/clear/${usuarioId}`,
         { method: "DELETE" }
       );
-
       if (!res.ok) throw new Error("No se pudo vaciar el carrito");
-
       fetchCarrito();
     } catch (err: unknown) {
       console.error(err);
@@ -88,11 +84,29 @@ export default function Carrito() {
     }
   };
 
-  // Calcular total de manera segura
+  // Calcular total
   const total = items.reduce(
     (sum, item) => sum + Number(item.subtotal || 0),
     0
   );
+
+  // Confirmar pago
+  const handlePagoConfirm = async (metodo: "yape" | "banco") => {
+    try {
+      const res = await fetch(`http://localhost:4000/api/pedidos/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ usuarioId, metodo }),
+      });
+      const data = await res.json();
+      alert(data.mensaje || `Pago confirmado con ${metodo}`);
+      setShowPago(false);
+      fetchCarrito();
+    } catch (err) {
+      console.error(err);
+      alert("Error al registrar el pedido");
+    }
+  };
 
   return (
     <div className="cart-page">
@@ -113,13 +127,9 @@ export default function Carrito() {
                 <img src={item.imagen_url} alt={item.nombre} />
                 <div className="cart-info">
                   <h3>{item.nombre}</h3>
-                  <p>
-                    Precio: {Number(item.precio)?.toFixed(2) || "0.00"} Bs
-                  </p>
+                  <p>Precio: {Number(item.precio)?.toFixed(2) || "0.00"} Bs</p>
                   <p>Cantidad: {item.cantidad || 0}</p>
-                  <p>
-                    Subtotal: {Number(item.subtotal)?.toFixed(2) || "0.00"} Bs
-                  </p>
+                  <p>Subtotal: {Number(item.subtotal)?.toFixed(2) || "0.00"} Bs</p>
                   <button
                     className="btn-remove"
                     onClick={() => removeItem(item.detalle_id)}
@@ -134,14 +144,19 @@ export default function Carrito() {
           <div className="cart-summary">
             <h3>Total estimado</h3>
             <p>{total.toFixed(2)} Bs</p>
-            <button className="btn-pay">Pagar</button>
-            <button className="btn-clear" onClick={clearCart}>
-              Vaciar carrito
-            </button>
+            <button className="btn-pay" onClick={() => setShowPago(true)}>Pagar</button>
+            <button className="btn-clear" onClick={clearCart}>Vaciar carrito</button>
           </div>
         </div>
+      )}
+
+      {showPago && (
+        <PagoModal
+          total={total}
+          onClose={() => setShowPago(false)}
+          onConfirm={handlePagoConfirm}
+        />
       )}
     </div>
   );
 }
-

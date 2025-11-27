@@ -1,18 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
-//Etiqueta header(icon)
 import { FaUser, FaBars, FaTimes, FaShoppingCart, FaFish } from "react-icons/fa";
-//Etiqueta main(icon)
-import { FaPlane, FaWallet, FaGift, FaHeadset, 
-  FaEye, 
-  FaHeart, FaExchangeAlt, FaStar, 
-  FaShoppingBasket, FaSearch, FaLink, FaFacebookF, 
-  FaTwitter, FaYoutube, FaPinterestP, FaInstagram } from "react-icons/fa";
+import {
+  FaPlane, FaWallet, FaGift, FaHeadset, FaEye, FaHeart, FaExchangeAlt, FaStar, FaShoppingBasket, FaSearch, FaLink, FaFacebookF,
+  FaTwitter, FaYoutube, FaPinterestP, FaInstagram
+} from "react-icons/fa";
 import "./Home.css";
-
-/*<div className="admin-button-container">
-              <Link to="/usuarios" className="banner-btn">administrador</Link>
-</div>*/
+import { useTranslation } from "react-i18next";
 
 function Home() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -47,6 +41,8 @@ function Home() {
     navigate("/");
   };
 
+  const { t, i18n } = useTranslation();
+
   return (
     <>
       <div className="menu-toggle">
@@ -66,8 +62,13 @@ function Home() {
             <div className="container-logo">
               <i className="fa-solid fa-mug-hot"><FaFish /></i>
               <h1 className="logo">
-                <a href="https://share.google/vfW41Uxa5gkEphhOO">ACUARIOFILIA</a>
+                <a href="https://share.google/vfW41Uxa5gkEphhOO">{t("header.title")}</a>
               </h1>
+            </div>
+
+            <div className="language-switch">
+              <button onClick={() => i18n.changeLanguage("es")}>ES</button>
+              <button onClick={() => i18n.changeLanguage("en")}>EN</button>
             </div>
 
             <div className="container-user">
@@ -106,7 +107,7 @@ function Home() {
           <nav className="navbar container">
             <i className="fa-solid fa-bars"></i>
             <ul className="menu">
-              <li><a href="#1">Inicio</a></li>
+              <li><a href="#1">{t("navbar.start")}</a></li>
               <li><a href="#2">Tienda</a></li>
               <li><a href="#3">Aprender sobre acuarismo</a></li>
               <li><Link to="/productos">Productos</Link></li>
@@ -557,7 +558,7 @@ function Home() {
           {/* Copyright */}
           <div className="copyright">
             <p>Adictos al mundo acuatico &copy; 2025</p>
-            <img src="src/componentes/assets/productos/payment.png" alt="Pagos" />
+            <img src="" alt="Pagos" />{/*src/componentes/assets/productos/payment.png*/}
           </div>
         </div>
       </footer>

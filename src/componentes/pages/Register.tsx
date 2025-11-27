@@ -1,17 +1,22 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { FaUser, FaLock, FaEnvelope } from 'react-icons/fa';
+import { FaUser, FaLock, FaEnvelope, FaEye, FaEyeSlash } from 'react-icons/fa';
 import './Register.css';
 
 const Register = () => {
   const [nombre, setNombre] = useState<string>('');
-  const [apellido_paterno, setAp] = useState<string>(''); // nuevo campo
-  const [apellido_materno, setAm] = useState<string>(''); // nuevo campo
+  const [apellido_paterno, setAp] = useState<string>('');
+  const [apellido_materno, setAm] = useState<string>('');
   const [correo, setEmail] = useState<string>('');
   const [contrasena, setPassword] = useState<string>('');
-  const [confirmPassword, setConfirmPassword] = useState<string>(''); // nuevo campo
-  const navigate = useNavigate(); // para redirigir al login
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
+
+  //estados de vista de password
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+
+  const navigate = useNavigate();
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,11 +33,11 @@ const Register = () => {
         apellido_materno,
         correo,
         contrasena,
-        rol: "cliente",  
-        usuarioCreacion: null,
+        rol: "cliente", // opcional, siempre cliente en registro
       });
-      alert(res.data.message); // mensaje de éxito
-      navigate('/login'); // redirige al login
+
+      alert(res.data.message);
+      navigate('/login');
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
         console.error('Error en registro:', err.response?.data || err.message);
@@ -44,13 +49,14 @@ const Register = () => {
     }
   };
 
+
   return (
     <div className='register-page'>
       <div className="wrapper-register">
         <form onSubmit={handleRegister}>
           <h1>REGISTRO</h1>
 
-          <div className="input-box">
+          <div className="input-box-2">
             <input
               type="text"
               id="nombre"
@@ -64,7 +70,7 @@ const Register = () => {
           </div>
 
           <div className='apellidos-container'>
-            <div className="input-box">
+            <div className="input-box-2">
               <input
                 type="text"
                 id="apellido_paterno"
@@ -77,7 +83,7 @@ const Register = () => {
               <FaUser className="icon" />
             </div>
 
-            <div className="input-box">
+            <div className="input-box-2">
               <input
                 type="text"
                 id="apellido_materno"
@@ -91,7 +97,7 @@ const Register = () => {
             </div>
           </div>
 
-          <div className="input-box">
+          <div className="input-box-2">
             <input
               type="email"
               id="correo"
@@ -104,9 +110,10 @@ const Register = () => {
             <FaEnvelope className="icon" />
           </div>
 
-          <div className="input-box">
+          {/* CAMPO CONTRASEÑA CON OJO */}
+          <div className="input-box-2">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="contrasena"
               required
               value={contrasena}
@@ -114,12 +121,21 @@ const Register = () => {
               autoComplete='off'
             />
             <label htmlFor="contrasena">Contraseña</label>
+
+            {contrasena.length > 0 && (
+              <span className="toggle-eye" onClick={() => setShowPassword(!showPassword)}>
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            )}
+
+
             <FaLock className="icon" />
           </div>
 
-          <div className="input-box">
+          {/* CAMPO CONFIRMAR CONTRASEÑA CON OJO */}
+          <div className="input-box-2">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               required
               value={confirmPassword}
@@ -127,9 +143,16 @@ const Register = () => {
               autoComplete='off'
             />
             <label htmlFor="confirmPassword">Confirmar contraseña</label>
+
+            {confirmPassword.length > 0 && (
+              <span className="toggle-eye" onClick={() => setShowConfirmPassword(!showConfirmPassword)}>
+                {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            )}
+
+
             <FaLock className="icon" />
           </div>
-
 
           <button type="submit">Registrarse</button>
 
@@ -143,4 +166,5 @@ const Register = () => {
 };
 
 export default Register;
+
 

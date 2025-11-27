@@ -138,22 +138,33 @@
   left: 20px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(255, 255, 255, 0.6); 
+  color: rgba(255, 255, 255, 0.6);
   font-size: 16px;
   pointer-events: none;
   transition: all 0.3s ease;
-  background: transparent;
+  background: transparent; /* SIN FONDO */
+  padding: 0 4px;
 }
 
 /* Efecto flotante y neón al enfocar o llenar */
 .input-box input:focus ~ label,
 .input-box input:valid ~ label {
-  top: -8px;
+  top: -14px;         /* SUBE UN POCO MÁS PARA DAR MARGEN */
   left: 15px;
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.6); 
-  background: rgba(0, 0, 0, 0.4); 
-  padding: 0 6px;
-  border-radius: 5px;
+  color: rgba(255, 255, 255, 0.8);
+  background: transparent !important; /* SIN FONDO */
+  padding: 0 4px;    /* Pequeño padding para que no se vea pegado */
+}
+
+.toggle-password {
+  position: absolute;
+  right: 45px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 18px;
+  color: #fff;
+  z-index: 10;
 }
 

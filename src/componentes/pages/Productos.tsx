@@ -18,7 +18,7 @@ function Productos() {
   const [busqueda, setBusqueda] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const productosPerPage = 10; // límite por página
-  const usuarioId = 1; // 👈 Cambia esto según tu sistema de login
+  const usuarioId = 1; // Cambia esto según tu sistema de login
 
   const fetchProductos = async () => {
     try {
@@ -55,7 +55,7 @@ function Productos() {
 
   const paginate = (page: number) => setCurrentPage(page);
 
-  // 🛒 Añadir producto al carrito
+  //Añadir producto al carrito
   const agregarAlCarrito = async (productoId: number) => {
     try {
       const res = await fetch("http://localhost:4000/api/carrito/add", {

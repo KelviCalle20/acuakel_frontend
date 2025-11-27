@@ -1,0 +1,264 @@
+/* ====================== MODAL BACKDROP ====================== */
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* ====================== MODAL ====================== */
+.modal {
+  background: linear-gradient(145deg, #0c1220, #112235);
+  border: 2px solid #00eaff;
+  border-radius: 18px;
+  padding: 2rem;
+  width: 80%;
+  max-width: 900px;
+  color: #e0f7ff;
+  box-shadow: 0 0 25px #00eaff;
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  animation: fadeIn 0.35s ease-in-out;
+}
+
+/* ====================== TÍTULO NEÓN ====================== */
+.modal h2 {
+  color: #00eaff;
+  text-shadow:
+    0 0 5px #00eaff,
+    0 0 10px #00eaff,
+    0 0 20px #00f0ff,
+    0 0 30px #00f0ff,
+    0 0 40px #00f0ff;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Animación fadeIn */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-15px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ====================== CONTENEDOR PRINCIPAL ====================== */
+.payment-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+
+/* ====================== FILA 1: SELECT + LOGOS ====================== */
+.payment-select-section {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  background: linear-gradient(145deg, #09111d, #0d1a2a);
+  border: 1px solid #00eaff;
+  border-radius: 14px;
+  padding: 1.2rem;
+  box-shadow: 0 0 15px #00eaff55;
+}
+
+/* Contenedor del select */
+.select-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Label del select */
+.payment-select-section label {
+  font-size: 1rem;
+  color: #00eaff;
+  text-shadow: 0 0 8px #00eaff;
+  font-weight: bold;
+}
+
+/* SELECT estilo neón */
+.payment-select-section select {
+  width: 100%;
+  padding: 0.7rem;
+  border-radius: 8px;
+  background-color: #03101e;
+  color: #00eaff;
+  border: 1px solid #00eaff;
+  outline: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.25s;
+  box-shadow: 0 0 10px #00eaff55;
+}
+
+.payment-select-section select:hover {
+  box-shadow: 0 0 15px #00eaff;
+}
+
+/*  LOGOS A LA DERECHA  */
+.payment-reference {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start; 
+  gap: 1rem;
+  background-color: #03101e;
+  border: 1px solid #00eaff;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* Logos en fila */
+.method-images {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start; /* <--- Antes era center */
+  gap: 1rem;
+}
+
+
+/* Cada logo */
+.logo-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+}
+
+.logo-card img {
+  width: 85px;
+  height: 85px;
+  object-fit: contain;
+  border-radius: 12px;
+  border: 1px solid #00eaff;
+  padding: 5px;
+  background-color: #02101c;
+  box-shadow: 0 0 10px #00eaff;
+}
+
+.logo-card span {
+  font-size: 0.9rem;
+  color: #bfefff;
+}
+
+/* ====================== QR SECTION ====================== */
+.qr-section {
+  flex: 1;
+  background: linear-gradient(145deg, #09111d, #0d1a2a);
+  border: 1px solid #00eaff;
+  border-radius: 14px;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  box-shadow: 0 0 20px #00eaff55;
+}
+
+.qr-section h3 {
+  color: #00eaff;
+  text-shadow: 0 0 8px #00eaff;
+  text-align: center;
+}
+
+.qr-section img {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  border: 1px solid #00eaff;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #00eaff;
+}
+
+/* ====================== BOTONES QR ====================== */
+.qr-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.qr-buttons button {
+  background-color: #00eaff;
+  color: #03101c;
+  border: none;
+  padding: 0.7rem 1rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.qr-buttons button:hover {
+  background-color: #5af4ff;
+  box-shadow: 0 0 15px #00eaff;
+}
+
+/* ====================== BOTÓN CERRAR ====================== */
+.close-btn {
+  align-self: flex-end;
+  background-color: #ff0066;
+  color: #ffffff;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.close-btn:hover {
+  background-color: #ff3d8a;
+  box-shadow: 0 0 10px #ff3d8a;
+}
+
+/* ====================== RESPONSIVO ====================== */
+@media (max-width: 1024px) {
+  .payment-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .payment-select-section {
+    flex-direction: column; /* Móviles: vuelve a columna */
+  }
+
+  .method-images {
+    justify-content: center;
+  }
+
+  .logo-card img {
+    width: 70px;
+    height: 70px;
+  }
+
+  .qr-section img {
+    width: 200px;
+    height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 95%;
+    padding: 1.5rem;
+  }
+
+  .qr-section img {
+    width: 150px;
+    height: 150px;
+  }
+
+  .qr-buttons button {
+    width: 100%;
+  }
+}

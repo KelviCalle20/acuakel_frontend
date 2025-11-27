@@ -12,6 +12,7 @@ interface Producto {
     imagen_url?: string;
     usuarioCreacion?: number;
     usuarioActualizacion?: number;
+    categoria?: { id: number; nombre: string }; // <-- relación para editar
 }
 
 interface Categoria {
@@ -48,7 +49,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 descripcion: producto.descripcion || "",
                 precio: producto.precio || 0,
                 stock: producto.stock || 0,
-                categoria_id: producto.categoria_id,
+                categoria_id: producto.categoria?.id, // <-- asigna el id de la categoría
                 imagen_url: producto.imagen_url || "",
             });
             setPreview(producto.imagen_url || "");
@@ -73,7 +74,6 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
             .catch((err) => console.error("Error al cargar categorías:", err));
     }, []);
 
-    // Manejar cambios del formulario
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
     ) => {
@@ -84,12 +84,11 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
         });
     };
 
-    // Manejar selección de imagen desde el PC
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const selectedFile = e.target.files?.[0];
         if (selectedFile) {
             setFile(selectedFile);
-            setPreview(URL.createObjectURL(selectedFile)); // vista previa inmediata
+            setPreview(URL.createObjectURL(selectedFile));
         }
     };
 
@@ -97,7 +96,6 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
         try {
             let imageUrl = formData.imagen_url;
 
-            // 🔹 Si el usuario seleccionó un archivo, primero lo subimos
             if (file) {
                 const imageData = new FormData();
                 imageData.append("file", file);
@@ -109,18 +107,18 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 
                 if (!uploadRes.ok) throw new Error("Error al subir imagen");
                 const uploadData = await uploadRes.json();
-                imageUrl = uploadData.url; // el backend debe devolver { url: "..." }
+                imageUrl = uploadData.url;
             }
 
-            // 🔹 Enviar los datos del producto
-            const url = producto && producto.id
+            const url = producto?.id
                 ? `http://localhost:4000/api/products/${producto.id}`
                 : "http://localhost:4000/api/products";
 
-            const method = producto && producto.id ? "PUT" : "POST";
+            const method = producto?.id ? "PUT" : "POST";
 
             const body = JSON.stringify({
                 ...formData,
+                categoria: formData.categoria_id ? { id: formData.categoria_id } : null, // <-- enviar relación
                 imagen_url: imageUrl,
                 usuarioCreacion: producto?.id ? undefined : loggedUserId,
                 usuarioActualizacion: producto?.id ? loggedUserId : undefined,
@@ -200,7 +198,6 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                     ))}
                 </select>
 
-                {/* Campo para URL de imagen */}
                 <input
                     type="text"
                     name="imagen_url"
@@ -209,13 +206,11 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                     onChange={handleChange}
                 />
 
-                {/* Opción para subir desde PC */}
                 <div className="file-upload">
                     <label>Subir imagen desde tu computadora:</label>
                     <input type="file" accept="image/*" onChange={handleFileChange} />
                 </div>
 
-                {/* Vista previa */}
                 {preview && (
                     <div className="image-preview">
                         <img src={preview} alt="Vista previa" />
@@ -236,4 +231,3 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 }
 
 export default ProductModal;
-

@@ -1679,4 +1679,42 @@ html {
 	.content p {
 		font-size: 1.6rem;
 	}
+}/*LANGUAGE SWITCHER (ES / EN)*/
+.language-switch {
+  position: absolute; /* lo sacamos del flujo normal */
+  top: 20px;          /* ajustar vertical según diseño */
+  left: 1000px;         /* ajustar horizontal según diseño */
+  display: flex;
+  gap: 1rem;          /* separación entre botones */
+  z-index: 1000;      /* encima de otros elementos */
+}
+
+/* Botones de idioma */
+.language-switch > button {
+  background: transparent;
+  border: 2px solid #00ffff;
+  padding: 0.5rem 1rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  color: #00ffff;
+  font-size: 1.4rem;
+  font-weight: 600;
+  text-shadow: none;  /* sin neón heredado */
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+}
+
+/* Hover específico solo para los botones */
+.language-switch > button:hover {
+  background-color: #00ffff;
+  color: #111;
+  text-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+  box-shadow: 0 0 15px #00ffff, 0 0 30px #00ffff;
+}
+
+/* Estado activo de idioma */
+.language-switch > button.active {
+  background-color: #00ffff;
+  color: #111;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff;
 }

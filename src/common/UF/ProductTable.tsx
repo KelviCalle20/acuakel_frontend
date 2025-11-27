@@ -12,8 +12,10 @@ interface Producto {
     stock: number;
     imagen_url?: string;
     categoria_id?: number;
-    categoria?: string;
+    categoria?: { id: number; nombre: string };
     estado: boolean;
+    mejor?: boolean;   
+    especial?: boolean;
 }
 
 export default function ProductTable() {
@@ -26,13 +28,11 @@ export default function ProductTable() {
     const [currentPage, setCurrentPage] = useState(1);
     const navigate = useNavigate();
 
-    // productsPerPage con persistencia en localStorage
     const [productsPerPage, setProductsPerPage] = useState<number>(() => {
         const saved = localStorage.getItem("productsPerPage");
         return saved ? Number(saved) : 20;
     });
 
-    // Guardar la preferencia cuando cambie
     useEffect(() => {
         localStorage.setItem("productsPerPage", productsPerPage.toString());
     }, [productsPerPage]);
@@ -84,7 +84,7 @@ export default function ProductTable() {
                 stock: 0,
                 imagen_url: "",
                 categoria_id: undefined,
-                categoria: "",
+                categoria: undefined,
                 estado: true,
             }
         );
@@ -163,7 +163,7 @@ export default function ProductTable() {
                                             "Sin imagen"
                                         )}
                                     </td>
-                                    <td>{producto.categoria || "Sin categoría"}</td>
+                                    <td>{producto.categoria?.nombre || "Sin categoría"}</td>
                                     <td className={producto.estado ? "product-estado-activo" : "product-estado-inactivo"}>
                                         {producto.estado ? "ACTIVO" : "INACTIVO"}
                                     </td>
@@ -262,8 +262,3 @@ export default function ProductTable() {
         </div>
     );
 }
-
-
-
-
-
