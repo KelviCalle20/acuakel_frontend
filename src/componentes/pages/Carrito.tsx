@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import PagoModal from "../../modulos/UI/PagoModal";
 import "./Carrito.css";
@@ -90,23 +89,42 @@ export default function Carrito() {
     0
   );
 
-  // Confirmar pago
+  // Confirmar pago y crear pedido
   const handlePagoConfirm = async (metodo: "yape" | "banco") => {
     try {
-      const res = await fetch(`http://localhost:4000/api/pedidos/create`, {
+      const detalles = items.map(item => ({
+        productoId: item.producto_id,
+        cantidad: item.cantidad,
+        precio_unitario: Number(item.precio),
+      }));
+
+      const res = await fetch(`http://localhost:4000/api/pedidos/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ usuarioId, metodo }),
+        body: JSON.stringify({
+          usuarioId,
+          total,
+          detalles,
+          metodo, // opcional si quieres guardar método
+        }),
       });
+
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(errText || "Error al crear pedido");
+      }
+
       const data = await res.json();
       alert(data.mensaje || `Pago confirmado con ${metodo}`);
       setShowPago(false);
-      fetchCarrito();
-    } catch (err) {
+      fetchCarrito(); // refresca el carrito
+    } catch (err: unknown) {
       console.error(err);
-      alert("Error al registrar el pedido");
+      if (err instanceof Error) alert(err.message);
+      else alert("Error desconocido al registrar el pedido");
     }
   };
+
 
   return (
     <div className="cart-page">
@@ -124,7 +142,7 @@ export default function Carrito() {
           <div className="cart-list">
             {items.map((item) => (
               <div className="cart-item" key={item.detalle_id}>
-                <img src={item.imagen_url} alt={item.nombre} />
+                <img src={item.imagen_url || ""} alt={item.nombre} />
                 <div className="cart-info">
                   <h3>{item.nombre}</h3>
                   <p>Precio: {Number(item.precio)?.toFixed(2) || "0.00"} Bs</p>
@@ -160,3 +178,4 @@ export default function Carrito() {
     </div>
   );
 }
+

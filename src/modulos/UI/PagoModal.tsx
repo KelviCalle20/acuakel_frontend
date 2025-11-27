@@ -1,11 +1,11 @@
 // src/modulos/UI/PagoModal.tsx
 import { useState } from "react";
 
-//Logos de referencia (NO son QR)
+// Logos de referencia (NO son QR)
 import YapeLogo from "../assets/YapeLogo.jpg";
 import BancoSolLogo from "../assets/BancoSolLogo.jpg";
 
-//QRs usados realmente para pagar
+// QRs usados realmente para pagar
 import YapeQR from "../assets/Yape.jpg";
 import BancoSolQR from "../assets/BancoSol.jpg";
 
@@ -21,13 +21,18 @@ export default function PagoModal({ total, onClose, onConfirm }: PagoModalProps)
   const [metodo, setMetodo] = useState<"" | "yape" | "banco">("");
 
   // QRs según método elegido
-  const qrCodes = {
+  const qrCodes: Record<"yape" | "banco", string> = {
     yape: YapeQR,
     banco: BancoSolQR,
   };
 
   const handleConfirm = () => {
-    if (metodo !== "") onConfirm(metodo);
+    if (metodo !== "") {
+      onConfirm(metodo);
+      setMetodo(""); // reset del método después de confirmar
+    } else {
+      alert("Selecciona un método de pago primero");
+    }
   };
 
   return (
@@ -70,7 +75,7 @@ export default function PagoModal({ total, onClose, onConfirm }: PagoModalProps)
           </div>
 
           {/* ---------------- QR SECTION ---------------- */}
-          {metodo !== "" && (
+          {metodo && qrCodes[metodo] && (
             <div className="qr-section">
               <h3>Escanea el QR para pagar {total.toFixed(2)} Bs</h3>
 
