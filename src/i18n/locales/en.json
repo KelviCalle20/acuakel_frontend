@@ -1,10 +1,37 @@
 {
-  "navbar": {
-    "start": "Start"
-  },
   "header": {
     "title": "AQUARIUM HOBBY"
+  },
+
+  "navbar": {
+    "start": "Start",
+    "shop": "Shop",
+    "learn": "Learn about aquariums",
+    "products": "Products",
+    "gallery": "Gallery"
+  },
+
+  "auth": {
+    "logout": "Logout"
+  },
+  "search": {
+    "placeholder": "Search..."
+  },
+  "banner": {
+    "title": "AQUARIUMS OF ALL KINDS",
+    "button": "Buy now"
+  },
+  "features": {
+    "shipping": "Free Shipping",
+    "shippingDesc": "On orders over $150",
+    "payment": "Cash on delivery",
+    "paymentDesc": "100% money back guarantee",
+    "gift": "Gift Card",
+    "giftDesc": "Special bonuses",
+    "support": "24/7 Support",
+    "supportDesc": "Call us anytime"
+  },
+  "footer": {
+    "copyright": "Aquatic World Addicts © 2025"
   }
 }
-
-

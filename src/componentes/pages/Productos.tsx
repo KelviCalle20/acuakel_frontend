@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { FaEye, FaHeart, FaExchangeAlt, FaStar, FaShoppingBasket, FaSearch, FaHome } from "react-icons/fa";
 import "./Productos.css";
+import { useNavigate } from "react-router-dom";
+
 
 interface Producto {
   id: number;
@@ -19,6 +21,8 @@ function Productos() {
   const [currentPage, setCurrentPage] = useState(1);
   const productosPerPage = 10; // límite por página
   const usuarioId = 1; // Cambia esto según tu sistema de login
+  const navigate = useNavigate();
+
 
   const fetchProductos = async () => {
     try {
@@ -103,6 +107,7 @@ function Productos() {
             </button>
             <button
               className="btn-home"
+              onClick={() => navigate("/")}
               style={{
                 marginLeft: "10px",
                 backgroundColor: "#00ffe0",
@@ -113,10 +118,10 @@ function Productos() {
                 display: "flex",
                 alignItems: "center",
               }}
-              onClick={() => (window.location.href = "/")}
             >
               <FaHome style={{ marginRight: "5px" }} /> Home
             </button>
+
           </div>
 
           {/* Grid de Productos */}

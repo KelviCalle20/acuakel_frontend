@@ -8,12 +8,63 @@ import {
 import "./Home.css";
 import { useTranslation } from "react-i18next";
 
-function Home() {
+interface Producto {
+  id: number;
+  nombre: string;
+  precio: number;
+  imagen_url: string;
+}
+
+function Home({ media }: { media: { video: string; audio: string } | null }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const navigate = useNavigate();
   const userMenuRef = useRef<HTMLDivElement>(null);
+
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+
+  const [productos, setProductos] = useState<Producto[]>([]);
+
+  useEffect(() => {
+    const fetchProductos = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/products");
+        const data = await res.json();
+        setProductos(data);
+      } catch (err) {
+        console.error("Error al cargar productos:", err);
+      }
+    };
+
+    fetchProductos();
+  }, []);
+
+
+
+  useEffect(() => {
+    const closeLang = (e: MouseEvent) => {
+      if (langRef.current && !langRef.current.contains(e.target as Node)) {
+        setLangOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", closeLang);
+    return () => document.removeEventListener("mousedown", closeLang);
+  }, []);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (video && media?.video) {
+      video.src = media.video;
+      video.playbackRate = 3;
+      video.play().catch(() => { });
+    }
+  }, [media]);
+
+
 
   useEffect(() => {
     const storedName = localStorage.getItem("userName");
@@ -66,10 +117,39 @@ function Home() {
               </h1>
             </div>
 
-            <div className="language-switch">
-              <button onClick={() => i18n.changeLanguage("es")}>ES</button>
-              <button onClick={() => i18n.changeLanguage("en")}>EN</button>
+            <div className="language-dropdown" ref={langRef}>
+              <button className="lang-btn" onClick={() => setLangOpen(!langOpen)}>
+                <img src="src/componentes/assets/planeta.png" alt="Language" className="lang-globe" />
+              </button>
+
+              {langOpen && (
+                <div className="lang-menu">
+                  <button
+                    onClick={() => {
+                      i18n.changeLanguage("es");
+                      setLangOpen(false);
+                    }}
+                    className={`lang-item ${i18n.language === "es" ? "active" : ""}`}
+                  >
+                    <img src="src/componentes/assets/español.png" alt="Español" />
+                    <span>Español</span>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      i18n.changeLanguage("en");
+                      setLangOpen(false);
+                    }}
+                    className={`lang-item ${i18n.language === "en" ? "active" : ""}`}
+                  >
+
+                    <img src="src/componentes/assets/ingles.png" alt="English" />
+                    <span>English</span>
+                  </button>
+                </div>
+              )}
             </div>
+
 
             <div className="container-user">
               {!userName ? (
@@ -86,7 +166,7 @@ function Home() {
                   {userMenuOpen && (
                     <div className="user-dropdown">
                       <button onClick={handleLogout} className="logout-btn-dropdown">
-                        <FaUser /> Cerrar sesión
+                        <FaUser /> {t("auth.logout")}
                       </button>
                     </div>
                   )}
@@ -108,14 +188,14 @@ function Home() {
             <i className="fa-solid fa-bars"></i>
             <ul className="menu">
               <li><a href="#1">{t("navbar.start")}</a></li>
-              <li><a href="#2">Tienda</a></li>
-              <li><a href="#3">Aprender sobre acuarismo</a></li>
-              <li><Link to="/productos">Productos</Link></li>
-              <li><a href="#5">Galeria Multimedia</a></li>
+              <li><a href="#2">{t("navbar.shop")}</a></li>
+              <li><a href="#3">{t("navbar.learn")}</a></li>
+              <li><Link to="/productos">{t("navbar.products")}</Link></li>
+              <li><a href="#5">{t("navbar.gallery")}</a></li>
             </ul>
 
             <form className="search-form">
-              <input type="search" placeholder="Buscar..." />
+              <input type="search" placeholder={t("search.placeholder")} />
               <button className="btn-search">
                 <FaSearch className="fa-solid fa-magnifying-glass" />
               </button>
@@ -129,12 +209,6 @@ function Home() {
           <FaTimes className="close-icon" onClick={() => setMenuOpen(false)} />
         </div>
         <ul>
-          <li>
-            <Link to="/usuarios" className="banner-btn">admin-Usuarios</Link>
-          </li>
-          <li>
-            <Link to="/bandeja-productos" className="banner-btn">admin-Productoa</Link>
-          </li>
           <li><a href="#">Inicio</a></li>
           <li><a href="#">Tienda</a></li>
           <li><a href="#">Aprender sobre acuarismo</a></li>
@@ -142,24 +216,37 @@ function Home() {
           <li><a href="#">Más</a></li>
           <li><a href="#">Blog</a></li>
           <li className="mobile-cart">
-            <Link to="/cart">
-              <FaShoppingCart className="fa-shopping-cart" /> Carrito (0)
+            <Link to="/carrito">
+              <FaShoppingCart className="fa-shopping-cart" /> Carrito
             </Link>
           </li>
         </ul>
       </div>
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
-
-      <section className="banner">
-        {/*<div className="admin-button-container">
+      {/*<div className="admin-button-container">
           <Link to="/usuarios" className="banner-btn">administrador</Link>
         </div>
         */}
-        <div className="content-banner">
+      <section className="banner">
+        {media && (
+          <video
+            ref={videoRef}
+            className="banner-video"
+            autoPlay
+            muted
+            loop
+            playsInline
+          >
+            <source src={media.video} type="video/mp4" />
+            Tu navegador no soporta video.
+          </video>
+        )}
 
-          {/*<p>Acuariofilia</p>*/}
-          <h2>ACUARIOS <br />DE TODO</h2>
-          <a href="/productos">Comprar ahora</a>
+
+        <div className="banner-overlay"></div>
+        <div className="content-banner">
+          <h2>{t("banner.title")}</h2>
+          <a href="/productos">{t("banner.button")}</a>
         </div>
       </section>
 
@@ -219,95 +306,32 @@ function Home() {
         </section>
 
         {/* SECCIÓN DE PRODUCTOS */}
-        <section className="container top-products" id="4">
+        <section className="container top-products">
           <h1 className="heading-1">Mejores Productos</h1>
-
-          <div className="container-options">
-            <span className="active">Destacados</span>
-            <span>Más recientes</span>
-            <span>Mejores Vendidos</span>
-          </div>
-
           <div className="container-products">
-            {/* PRODUCTO 1 */}
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/FiltroXBA5.jpg" alt="Filtro XBA-500" />
-                <span className="discount">-13%</span>
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
+            {productos.slice(0, 4).map((p) => (
+              <div className="card-product" key={p.id}>
+                <div className="container-img">
+                  <img src={p.imagen_url} alt={p.nombre} />
+                  <div className="button-group">
+                    <span><FaEye /></span>
+                    <span><FaHeart /></span>
+                    <span><FaExchangeAlt /></span>
+                  </div>
+                </div>
+                <div className="content-card-product">
+                  <div className="stars">
+                    <FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} />
+                  </div>
+                  <h3>{p.nombre}</h3>
+                  <span className="add-cart"><FaShoppingBasket /></span>
+                  <p className="price">{p.precio} Bs</p>
                 </div>
               </div>
-              <div className="content-card-product">
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} />
-                </div>
-                <h3>Filtro XBA-500</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">250bs <span>300bs</span></p>
-              </div>
-            </div>
-
-            {/* PRODUCTO 2 */}
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/SOBO-termostato200watts.jpg" alt="Termostato 200W" />
-                <span className="discount">-22%</span>
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} /><FaStar style={{ opacity: 0.3 }} />
-                </div>
-                <h3>Cafe Inglés</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">150bs <span>200bs</span></p>
-              </div>
-            </div>
-
-            {/* PRODUCTO 3 */}
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/AzulDeMetileno.jpg" alt="Azul de metileno" />
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars"><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></div>
-                <h3>Azul de metileno</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">15bs</p>
-              </div>
-            </div>
-
-            {/* PRODUCTO 4 */}
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/Tubifex.jpg" alt="tubifex" />
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars"><FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} /></div>
-                <h3>tubifex</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">10bs</p>
-              </div>
-            </div>
+            ))}
           </div>
         </section>
+
 
         {/* GALERÍA */}
         <section className="gallery" id="3">
@@ -322,84 +346,31 @@ function Home() {
         <section className="container specials">
           <h1 className="heading-1">Especiales</h1>
           <div className="container-products">
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/PezBettas.jpg" alt="Pez betta" />
-                <span className="discount">-13%</span>
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
+            {productos
+              .slice(0, 4)
+              .map((p) => (
+                <div className="card-product" key={`especial-${p.id}`}>
+                  <div className="container-img">
+                    <img src={p.imagen_url} alt={p.nombre} />
+                    <div className="button-group">
+                      <span><FaEye /></span>
+                      <span><FaHeart /></span>
+                      <span><FaExchangeAlt /></span>
+                    </div>
+                  </div>
+                  <div className="content-card-product">
+                    <div className="stars">
+                      <FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} />
+                    </div>
+                    <h3>{p.nombre}</h3>
+                    <span className="add-cart"><FaShoppingBasket /></span>
+                    <p className="price">{p.precio} Bs</p>
+                  </div>
                 </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} />
-                </div>
-                <h3>Bettas</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">96bs <span>100bs</span></p>
-              </div>
-            </div>
-
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/PezDisco.jpg" alt="Discos" />
-                <span className="discount">-22%</span>
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} /><FaStar style={{ opacity: 0.3 }} />
-                </div>
-                <h3>Pez Disco</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">550bs <span>700bs</span></p>
-              </div>
-            </div>
-
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/LangostaAzul.jpg" alt="Langosta azul" />
-                <span className="discount">-30%</span>
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars"><FaStar /><FaStar /><FaStar /><FaStar /><FaStar /></div>
-                <h3>Langosta Azul</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">58bs <span>75bs</span></p>
-              </div>
-            </div>
-
-            <div className="card-product">
-              <div className="container-img">
-                <img src="src/componentes/assets/productos/PezOscar.jpg" alt="Pez OSCAR" />
-                <div className="button-group">
-                  <span><FaEye /></span>
-                  <span><FaHeart /></span>
-                  <span><FaExchangeAlt /></span>
-                </div>
-              </div>
-              <div className="content-card-product">
-                <div className="stars">
-                  <FaStar /><FaStar /><FaStar /><FaStar /><FaStar style={{ opacity: 0.3 }} />
-                </div>
-                <h3>Oscar</h3>
-                <span className="add-cart"><FaShoppingBasket /></span>
-                <p className="price">900bs</p>
-              </div>
-            </div>
+              ))}
           </div>
         </section>
+
 
         {/* BLOGS */}
         <section className="container blogs" id="5">
@@ -558,7 +529,8 @@ function Home() {
           {/* Copyright */}
           <div className="copyright">
             <p>Adictos al mundo acuatico &copy; 2025</p>
-            <img src="" alt="Pagos" />{/*src/componentes/assets/productos/payment.png*/}
+            <img src="src/componentes/assets/productos/payment.png" alt="Pagos" />{/*src/componentes/assets/productos/payment.png*/}
+
           </div>
         </div>
       </footer>
