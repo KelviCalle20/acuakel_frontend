@@ -12,7 +12,7 @@ const Register = () => {
   const [contrasena, setPassword] = useState<string>('');
   const [confirmPassword, setConfirmPassword] = useState<string>('');
 
-  //estados de vista de password
+  // estados de vista de password
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
@@ -27,13 +27,13 @@ const Register = () => {
     }
 
     try {
+      // No enviamos rol, backend lo asigna automáticamente
       const res = await axios.post('http://localhost:4000/api/users/register', {
         nombre,
         apellido_paterno,
         apellido_materno,
         correo,
         contrasena,
-        rol: "cliente", // opcional, siempre cliente en registro
       });
 
       alert(res.data.message);
@@ -48,7 +48,6 @@ const Register = () => {
       }
     }
   };
-
 
   return (
     <div className='register-page'>
@@ -110,7 +109,7 @@ const Register = () => {
             <FaEnvelope className="icon" />
           </div>
 
-          {/* CAMPO CONTRASEÑA CON OJO */}
+          {/* CONTRASEÑA */}
           <div className="input-box-2">
             <input
               type={showPassword ? "text" : "password"}
@@ -128,11 +127,10 @@ const Register = () => {
               </span>
             )}
 
-
             <FaLock className="icon" />
           </div>
 
-          {/* CAMPO CONFIRMAR CONTRASEÑA CON OJO */}
+          {/* CONFIRMAR CONTRASEÑA */}
           <div className="input-box-2">
             <input
               type={showConfirmPassword ? "text" : "password"}
@@ -150,7 +148,6 @@ const Register = () => {
               </span>
             )}
 
-
             <FaLock className="icon" />
           </div>
 
@@ -166,5 +163,6 @@ const Register = () => {
 };
 
 export default Register;
+
 
 

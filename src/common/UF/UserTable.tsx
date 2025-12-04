@@ -11,7 +11,8 @@ interface User {
   apellido_materno: string;
   correo: string;
   estado: boolean;
-  rol?: string;
+  roles?: { rol: { nombre: string } }[]; // arreglo de roles desde backend
+  rol?: string; // para mostrar en la tabla
   usuarioCreacion?: number;
   usuarioActualizacion?: number;
 }
@@ -26,22 +27,52 @@ export default function UserTable() {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
-  // usersPerPage con persistencia en localStorage
   const [usersPerPage, setUsersPerPage] = useState<number>(() => {
     const saved = localStorage.getItem("usersPerPage");
     return saved ? Number(saved) : 10;
   });
 
-  // Guardar la preferencia cuando cambie
   useEffect(() => {
     localStorage.setItem("usersPerPage", usersPerPage.toString());
   }, [usersPerPage]);
 
   const fetchUsers = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/users");
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("No estás autenticado. Inicia sesión.");
+        navigate("/login");
+        return;
+      }
+
+      const res = await fetch("http://localhost:4000/api/users", {
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (res.status === 401) {
+        alert("No autorizado. Por favor inicia sesión nuevamente.");
+        navigate("/login");
+        return;
+      }
+
+      if (res.status === 403) {
+        alert("Acceso denegado. No tienes permisos para ver los usuarios.");
+        return;
+      }
+
       if (!res.ok) throw new Error("Error al obtener los usuarios");
-      const data = await res.json();
+
+      let data: User[] = await res.json();
+
+      // Transformar roles a un string para mostrar en la tabla
+      data = data.map(u => ({
+        ...u,
+        rol: u.roles?.map(r => r.rol.nombre).join(", ") || "Sin rol"
+      }));
+
       setUsers(data);
       setFilteredUsers(data);
     } catch (err) {
@@ -63,10 +94,9 @@ export default function UserTable() {
         u.correo.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filtered);
-    setCurrentPage(1); // reset a la página 1 al filtrar
+    setCurrentPage(1);
   }, [searchTerm, users]);
 
-  // Paginación
   const indexOfLast = currentPage * usersPerPage;
   const indexOfFirst = indexOfLast - usersPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirst, indexOfLast);
@@ -145,16 +175,11 @@ export default function UserTable() {
                   <td>{user.apellido_materno}</td>
                   <td>{user.correo}</td>
                   <td>{user.rol}</td>
-                  <td
-                    className={user.estado ? "estado-activo" : "estado-inactivo"}
-                  >
+                  <td className={user.estado ? "estado-activo" : "estado-inactivo"}>
                     {user.estado ? "ACTIVO" : "INACTIVO"}
                   </td>
                   <td>
-                    <button
-                      className="edit-btn"
-                      onClick={() => openModal(user)}
-                    >
+                    <button className="edit-btn" onClick={() => openModal(user)}>
                       <FaPen />
                     </button>
 
@@ -164,14 +189,11 @@ export default function UserTable() {
                         checked={user.estado}
                         onChange={async (e) => {
                           try {
-                            await fetch(
-                              `http://localhost:4000/api/users/${user.id}/status`,
-                              {
-                                method: "PATCH",
-                                headers: { "Content-Type": "application/json" },
-                                body: JSON.stringify({ estado: e.target.checked }),
-                              }
-                            );
+                            await fetch(`http://localhost:4000/api/users/${user.id}/status`, {
+                              method: "PATCH",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({ estado: e.target.checked }),
+                            });
                             fetchUsers();
                           } catch (err) {
                             console.error(err);
@@ -191,7 +213,6 @@ export default function UserTable() {
           </tbody>
         </table>
 
-        {/* Paginación */}
         <div className="user-pagination-container">
           <button onClick={() => changePage(currentPage - 1)} disabled={currentPage === 1}>
             Anterior
@@ -223,11 +244,7 @@ export default function UserTable() {
         </div>
 
         {isModalOpen && selectedUser && (
-          <UserModal
-            user={selectedUser}
-            closeModal={closeModal}
-            refreshUsers={fetchUsers}
-          />
+          <UserModal user={selectedUser} closeModal={closeModal} refreshUsers={fetchUsers} />
         )}
       </div>
 
@@ -248,6 +265,5 @@ export default function UserTable() {
     </div>
   );
 }
-
 
 

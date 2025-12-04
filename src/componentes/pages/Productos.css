@@ -367,3 +367,40 @@ html, body {
   color: #111;
   box-shadow: 0 0 10px #00ffff;
 }
+
+/* Tarjeta agotada */
+.card-agotado {
+  position: relative;
+  background: rgba(255, 0, 0, 0.08);
+  border: 1px solid #ff003c;
+  box-shadow: 0 0 15px rgba(255, 0, 60, 0.7);
+  pointer-events: auto;
+  filter: grayscale(0.6);
+}
+
+/* Badge diagonal */
+.badge-agotado {
+  position: absolute;
+  top: 20px;
+  left: -40px;
+  width: 160px;
+  padding: 6px 0;
+  background: linear-gradient(45deg, red, #ff0040);
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  transform: rotate(-45deg);
+  box-shadow: 0 0 12px red;
+  z-index: 5;
+  font-size: 14px;
+}
+
+/* Deshabilitar carrito */
+.add-carts.disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+  color: red;
+  text-shadow: 0 0 5px red;
+}
+

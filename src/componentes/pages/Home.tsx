@@ -25,6 +25,8 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
   const [langOpen, setLangOpen] = useState(false);
   const langRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isCliente, setIsCliente] = useState(false);
+
 
 
   const [productos, setProductos] = useState<Producto[]>([]);
@@ -87,12 +89,32 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
   const handleLogout = (): void => {
     localStorage.removeItem("userName");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userRole");
     setUserName(null);
+    setIsCliente(false);
     setUserMenuOpen(false);
     navigate("/");
   };
 
+
   const { t, i18n } = useTranslation();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    const roles = localStorage.getItem("userRole");
+
+    if (token && roles) {
+      try {
+        const parsedRoles = JSON.parse(roles);
+        setIsCliente(parsedRoles.includes("Cliente"));
+      } catch (err) {
+        console.error("Error al leer roles:", err);
+        setIsCliente(false);
+      }
+    }
+  }, []);
+
 
   return (
     <>
@@ -150,7 +172,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
               )}
             </div>
 
-
+            {/*INICIO DE SESION*/}
             <div className="container-user">
               {!userName ? (
                 <Link to="/login" className="login-section">
@@ -173,11 +195,14 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
                 </div>
               )}
 
-              <div className="content-shopping-cart">
-                <Link to="/carrito">
-                  <FaShoppingCart className="fa-user" />
-                </Link>
-              </div>
+              {isCliente && (
+                <div className="content-shopping-cart">
+                  <Link to="/carrito">
+                    <FaShoppingCart className="fa-user" />
+                  </Link>
+                </div>
+              )}
+
             </div>
 
           </div>

@@ -18,15 +18,20 @@ export default function Carrito() {
   const [error, setError] = useState<string | null>(null);
   const [showPago, setShowPago] = useState(false);
 
-  const usuarioId = Number(localStorage.getItem("userId")) || 1;
+  const token = localStorage.getItem("token"); // ✅ JWT
 
-  // Función para obtener el carrito
+  // ✅ OBTENER CARRITO DEL USUARIO LOGUEADO (SIN usuarioId en la URL)
   const fetchCarrito = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const res = await fetch(`http://localhost:4000/api/carrito/${usuarioId}`);
+      const res = await fetch(`http://localhost:4000/api/carrito`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (!res.ok) throw new Error("Error al cargar el carrito");
 
       const data = await res.json();
@@ -47,16 +52,23 @@ export default function Carrito() {
     fetchCarrito();
   }, []);
 
-  // Eliminar un item del carrito
+  // ✅ ELIMINAR PRODUCTO
   const removeItem = async (detalleId: number) => {
     if (!confirm("¿Eliminar este producto del carrito?")) return;
 
     try {
       const res = await fetch(
         `http://localhost:4000/api/carrito/remove/${detalleId}`,
-        { method: "DELETE" }
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
       );
+
       if (!res.ok) throw new Error("No se pudo eliminar el producto");
+
       fetchCarrito();
     } catch (err: unknown) {
       console.error(err);
@@ -65,16 +77,20 @@ export default function Carrito() {
     }
   };
 
-  // Vaciar todo el carrito
+  // ✅ VACIAR CARRITO
   const clearCart = async () => {
     if (!confirm("¿Vaciar todo el carrito?")) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:4000/api/carrito/clear/${usuarioId}`,
-        { method: "DELETE" }
-      );
+      const res = await fetch(`http://localhost:4000/api/carrito/clear`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (!res.ok) throw new Error("No se pudo vaciar el carrito");
+
       fetchCarrito();
     } catch (err: unknown) {
       console.error(err);
@@ -83,13 +99,13 @@ export default function Carrito() {
     }
   };
 
-  // Calcular total
+  // ✅ TOTAL
   const total = items.reduce(
     (sum, item) => sum + Number(item.subtotal || 0),
     0
   );
 
-  // Confirmar pago y crear pedido
+  // ✅ CONFIRMAR PAGO
   const handlePagoConfirm = async (metodo: "yape" | "banco") => {
     try {
       const detalles = items.map(item => ({
@@ -98,14 +114,16 @@ export default function Carrito() {
         precio_unitario: Number(item.precio),
       }));
 
-      const res = await fetch(`http://localhost:4000/api/pedidos/`, {
+      const res = await fetch(`http://localhost:4000/api/pedidos`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
-          usuarioId,
           total,
           detalles,
-          metodo, // opcional si quieres guardar método
+          metodo,
         }),
       });
 
@@ -117,14 +135,13 @@ export default function Carrito() {
       const data = await res.json();
       alert(data.mensaje || `Pago confirmado con ${metodo}`);
       setShowPago(false);
-      fetchCarrito(); // refresca el carrito
+      fetchCarrito();
     } catch (err: unknown) {
       console.error(err);
       if (err instanceof Error) alert(err.message);
       else alert("Error desconocido al registrar el pedido");
     }
   };
-
 
   return (
     <div className="cart-page">
@@ -145,9 +162,9 @@ export default function Carrito() {
                 <img src={item.imagen_url || ""} alt={item.nombre} />
                 <div className="cart-info">
                   <h3>{item.nombre}</h3>
-                  <p>Precio: {Number(item.precio)?.toFixed(2) || "0.00"} Bs</p>
-                  <p>Cantidad: {item.cantidad || 0}</p>
-                  <p>Subtotal: {Number(item.subtotal)?.toFixed(2) || "0.00"} Bs</p>
+                  <p>Precio: {Number(item.precio).toFixed(2)} Bs</p>
+                  <p>Cantidad: {item.cantidad}</p>
+                  <p>Subtotal: {Number(item.subtotal).toFixed(2)} Bs</p>
                   <button
                     className="btn-remove"
                     onClick={() => removeItem(item.detalle_id)}
@@ -178,4 +195,3 @@ export default function Carrito() {
     </div>
   );
 }
-

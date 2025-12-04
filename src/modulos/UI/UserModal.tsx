@@ -13,6 +13,11 @@ interface User {
   usuarioActualizacion?: number;
 }
 
+interface Role {
+  id: number;
+  nombre: string;
+}
+
 interface Props {
   user?: User | null;
   closeModal: () => void;
@@ -20,16 +25,37 @@ interface Props {
 }
 
 function UserModal({ user, closeModal, refreshUsers }: Props) {
-  const loggedUserId = Number(localStorage.getItem("userId")) || 1; // se usa 1 como admin inicial
+  const loggedUserId = Number(localStorage.getItem("userId")) || 1;
+  const token = localStorage.getItem("token");
 
+  const [roles, setRoles] = useState<Role[]>([]);
   const [formData, setFormData] = useState<User>({
     nombre: "",
     apellido_paterno: "",
     apellido_materno: "",
     correo: "",
     contrasena: "",
-    rol: "cliente",
+    rol: "",
   });
+
+  useEffect(() => {
+    const fetchRoles = async () => {
+      try {
+        const res = await fetch("http://localhost:4000/api/roles", {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) return console.error("Error al cargar roles");
+        const data = await res.json();
+        setRoles(data);
+      } catch (error) {
+        console.error("Error al traer roles:", error);
+      }
+    };
+    fetchRoles();
+  }, [token]);
 
   useEffect(() => {
     if (user) {
@@ -40,7 +66,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         apellido_materno: user.apellido_materno || "",
         correo: user.correo || "",
         contrasena: "",
-        rol: user.rol || "cliente",
+        rol: user.rol || "",
       });
     } else {
       setFormData({
@@ -49,7 +75,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         apellido_materno: "",
         correo: "",
         contrasena: "",
-        rol: "cliente",
+        rol: "",
       });
     }
   }, [user]);
@@ -61,57 +87,82 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
   const handleSave = async () => {
     try {
       let response;
+      let userId: number;
 
       if (user && user.id) {
-        // Actualizar usuario existente
+        // Actualizar usuario
         response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             nombre: formData.nombre,
             apellido_paterno: formData.apellido_paterno,
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
-            rol: formData.rol,
-            usuarioActualizacion: loggedUserId,
+            usuarioActualizacion: loggedUserId, // ✅ id de quien actualiza
           }),
         });
+        if (!response.ok) throw new Error("No se pudo actualizar usuario");
+        const data = await response.json();
+        userId = data.user.id;
       } else {
-        // Registrar nuevo usuario
+        // Registrar usuario
         response = await fetch("http://localhost:4000/api/users/register", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
             nombre: formData.nombre,
             apellido_paterno: formData.apellido_paterno,
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
             contrasena: formData.contrasena,
-            rol: "cliente",
-            usuarioCreacion: loggedUserId,
+            usuarioCreacion: loggedUserId, // ✅ id de quien crea
           }),
         });
+        if (!response.ok) throw new Error("No se pudo registrar usuario");
+        const data = await response.json();
+        userId = data.user.id;
       }
 
-      //Validar respuesta
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Error del servidor:", errorText);
-        alert("No se pudo guardar el usuario. Verifica los datos o el servidor.");
-        return;
+      // Asignar rol con loggedUserId
+      if (formData.rol) {
+        const rolSeleccionado = roles.find(r => r.nombre === formData.rol);
+        if (rolSeleccionado) {
+          const rolResp = await fetch(
+            `http://localhost:4000/api/role_user/${userId}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+              body: JSON.stringify({ 
+                rolId: rolSeleccionado.id,
+                loggedUserId: loggedUserId // ✅ enviamos id de quien asigna
+              }),
+            }
+          );
+          if (!rolResp.ok) throw new Error("No se pudo asignar el rol");
+        }
       }
 
-      await refreshUsers(); // refresca la lista
-      closeModal(); // cierra el modal 
+      await refreshUsers();
+      closeModal();
     } catch (err) {
       console.error("Error al guardar usuario:", err);
-      alert("Error al conectar con el servidor.");
+      alert("Error al guardar usuario o asignar rol");
     }
   };
 
   return (
     <div className="modal-overlay">
-      <div className="modal">
+      <div className="modal-user">
         <h2>{user?.id ? "Actualizar Usuario" : "Adicionar Usuario"}</h2>
 
         <input
@@ -121,6 +172,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           onChange={handleChange}
           placeholder="Nombre"
         />
+
         <input
           type="text"
           name="apellido_paterno"
@@ -128,6 +180,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           onChange={handleChange}
           placeholder="Apellido Paterno"
         />
+
         <input
           type="text"
           name="apellido_materno"
@@ -135,6 +188,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
           onChange={handleChange}
           placeholder="Apellido Materno"
         />
+
         <input
           type="email"
           name="correo"
@@ -155,20 +209,21 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
 
         <select
           name="rol"
-          value={formData.rol || "cliente"}
+          value={formData.rol || ""}
           onChange={handleChange}
         >
-          <option value="cliente">Cliente</option>
-          <option value="vendedor">Vendedor</option>
-          <option value="administrador">Administrador</option>
+          <option value="">Seleccione un rol</option>
+          {roles.map((r) => (
+            <option key={r.id} value={r.nombre}>
+              {r.nombre}
+            </option>
+          ))}
         </select>
 
         <div className="modal-actions">
+          <button onClick={closeModal} className="btn-cancel">Cancelar</button>
           <button onClick={handleSave} className="btn-save">
             {user?.id ? "Actualizar" : "Registrar"}
-          </button>
-          <button onClick={closeModal} className="btn-cancel">
-            Cancelar
           </button>
         </div>
       </div>

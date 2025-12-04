@@ -30,7 +30,7 @@ export default function ProductTable() {
 
     const [productsPerPage, setProductsPerPage] = useState<number>(() => {
         const saved = localStorage.getItem("productsPerPage");
-        return saved ? Number(saved) : 20;
+        return saved ? Number(saved) : 5;
     });
 
     useEffect(() => {

@@ -1,0 +1,196 @@
+/* ===== CONTENEDOR GENERAL ===== */
+.stats-layout {
+  display: flex;
+  min-height: 100vh;
+  background: radial-gradient(circle at top, #0f172a, #020617);
+  color: #e5e7eb;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ===== SIDEBAR ===== */
+.stats-sidebar {
+  width: 260px;
+  background: linear-gradient(180deg, #020617, #020617);
+  border-right: 2px solid #00f7ff;
+  padding: 30px 20px;
+  box-shadow: 0 0 25px rgba(0, 247, 255, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stats-sidebar h3 {
+  color: #00f7ff;
+  text-align: center;
+  font-size: 22px;
+  margin-bottom: 25px;
+  letter-spacing: 1px;
+  text-shadow: 0 0 10px #00f7ff;
+}
+
+/* ===== BOTONES SIDEBAR ===== */
+.stats-sidebar button {
+  background: radial-gradient(circle at top, #0b1220, #020617);
+  border: 1.5px solid #00f7ff;
+  color: #00f7ff;
+  padding: 14px;
+  font-size: 15px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  box-shadow: 0 0 10px rgba(0, 247, 255, 0.3);
+  transition: all 0.25s ease;
+}
+
+.stats-sidebar button:hover {
+  background: #00f7ff;
+  color: #020617;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 0 20px #00f7ff, 0 0 40px rgba(0, 247, 255, 0.6);
+}
+
+/* ===== CONTENIDO ===== */
+.stats-content {
+  flex: 1;
+  padding: 35px;
+  overflow-y: auto;
+}
+
+/* ===== TÍTULOS ===== */
+.stats-content h2 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #00f7ff;
+  text-shadow: 0 0 10px rgba(0, 247, 255, 0.8);
+}
+
+/* ===== CONTENEDOR DE GRÁFICOS ===== */
+.stats-charts {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  background: rgba(2, 6, 23, 0.9);
+  padding: 30px;
+  border-radius: 24px;
+  border: 1px solid rgba(0, 247, 255, 0.4);
+  box-shadow: 0 0 25px rgba(0, 247, 255, 0.2);
+}
+
+/* ===== TOTAL DE CATEGORÍAS ===== */
+.stats-categorias-total {
+  margin-top: 25px;
+  font-size: 28px;
+  font-weight: 700;
+  color: #00f7ff;
+  text-align: center;
+  padding: 35px;
+  border-radius: 22px;
+  background: radial-gradient(circle, #020617, #020617);
+  border: 1.5px solid #00f7ff;
+  box-shadow: 0 0 25px rgba(0, 247, 255, 0.35);
+}
+
+/* ===== BOTONES EXPORTAR ===== */
+.stats-export-buttons {
+  margin-top: 25px;
+  display: flex;
+  gap: 20px;
+}
+
+.stats-export-buttons button {
+  padding: 14px 26px;
+  border-radius: 16px;
+  font-size: 14px;
+  letter-spacing: 0.6px;
+  font-weight: 700;
+  cursor: pointer;
+  background: linear-gradient(90deg, #020617, #020617);
+  color: #00f7ff;
+  border: 1.5px solid #00f7ff;
+  box-shadow: 0 0 12px rgba(0, 247, 255, 0.4);
+  transition: all 0.25s ease;
+}
+
+.stats-export-buttons button:hover {
+  background: #00f7ff;
+  color: #020617;
+  box-shadow: 0 0 25px #00f7ff, 0 0 50px rgba(0, 247, 255, 0.6);
+  transform: translateY(-2px) scale(1.05);
+}
+
+/* ===== TOOLTIP Y LEGENDA DE RECHARTS ===== */
+.recharts-tooltip-wrapper {
+  outline: none;
+}
+
+.recharts-default-tooltip {
+  background: #020617 !important;
+  border: 1px solid #00f7ff !important;
+  color: #00f7ff !important;
+  box-shadow: 0 0 15px rgba(0, 247, 255, 0.6);
+  border-radius: 10px;
+}
+
+.recharts-legend-item-text {
+  color: #e5e7eb !important;
+}
+
+/* ===== SCROLLBAR PERSONALIZADO ===== */
+.stats-content::-webkit-scrollbar {
+  width: 10px;
+}
+
+.stats-content::-webkit-scrollbar-track {
+  background: #020617;
+}
+
+.stats-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(#00f7ff, #0066ff);
+  border-radius: 10px;
+}
+
+/* ===== FIX COLOR BARRAS (RECHARTS) ===== */
+.recharts-bar-rectangle path {
+  fill: #00f7ff !important;
+}
+
+/* ===== TEXTO DE TOOLTIP EN BLANCO ===== */
+.recharts-tooltip-item {
+  color: #00f7ff !important;
+  font-weight: 600;
+}
+
+.recharts-tooltip-label {
+  color: #ffffff !important;
+  font-weight: bold;
+}
+
+/* ===== FONDO DEL TOOLTIP ===== */
+.recharts-default-tooltip {
+  background-color: #020617 !important;
+  border: 1.5px solid #00f7ff !important;
+  box-shadow: 0 0 18px rgba(0, 247, 255, 0.7);
+}
+
+/* ===== TEXTO DE EJES (NUMEROS Y LETRAS) ===== */
+.recharts-cartesian-axis-tick text {
+  fill: #e5e7eb !important;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1100px) {
+  .stats-charts {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .stats-sidebar {
+    width: 220px;
+  }
+}
+

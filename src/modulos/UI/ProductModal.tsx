@@ -12,7 +12,7 @@ interface Producto {
     imagen_url?: string;
     usuarioCreacion?: number;
     usuarioActualizacion?: number;
-    categoria?: { id: number; nombre: string }; // <-- relación para editar
+    categoria?: { id: number; nombre: string };
 }
 
 interface Categoria {
@@ -40,7 +40,9 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
     const [file, setFile] = useState<File | null>(null);
     const [preview, setPreview] = useState<string>("");
 
-    // Cargar datos al editar
+    const [precioInput, setPrecioInput] = useState<string>("0");
+    const [stockInput, setStockInput] = useState<string>("0");
+
     useEffect(() => {
         if (producto) {
             setFormData({
@@ -49,9 +51,11 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 descripcion: producto.descripcion || "",
                 precio: producto.precio || 0,
                 stock: producto.stock || 0,
-                categoria_id: producto.categoria?.id, // <-- asigna el id de la categoría
+                categoria_id: producto.categoria?.id,
                 imagen_url: producto.imagen_url || "",
             });
+            setPrecioInput((producto.precio || 0).toString());
+            setStockInput((producto.stock || 0).toString());
             setPreview(producto.imagen_url || "");
         } else {
             setFormData({
@@ -62,11 +66,12 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 categoria_id: undefined,
                 imagen_url: "",
             });
+            setPrecioInput("0");
+            setStockInput("0");
             setPreview("");
         }
     }, [producto]);
 
-    // Cargar categorías
     useEffect(() => {
         fetch("http://localhost:4000/api/categories")
             .then((res) => res.json())
@@ -118,7 +123,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 
             const body = JSON.stringify({
                 ...formData,
-                categoria: formData.categoria_id ? { id: formData.categoria_id } : null, // <-- enviar relación
+                categoria: formData.categoria_id ? { id: formData.categoria_id } : null,
                 imagen_url: imageUrl,
                 usuarioCreacion: producto?.id ? undefined : loggedUserId,
                 usuarioActualizacion: producto?.id ? loggedUserId : undefined,
@@ -166,24 +171,38 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                     rows={3}
                 />
 
-                <input
-                    type="number"
-                    name="precio"
-                    value={formData.precio}
-                    onChange={handleChange}
-                    placeholder="Precio"
-                    min="0"
-                    step="0.01"
-                />
-
-                <input
-                    type="number"
-                    name="stock"
-                    value={formData.stock}
-                    onChange={handleChange}
-                    placeholder="Stock disponible"
-                    min="0"
-                />
+                {/* ====== FILA DE PRECIO Y STOCK ====== */}
+                <div className="row-inputs">
+                    <input
+                        type="number"
+                        name="precio"
+                        value={precioInput}
+                        onChange={(e) => {
+                            const val = e.target.value;
+                            setPrecioInput(val);
+                            setFormData({ ...formData, precio: val === "" ? 0 : Number(val) });
+                        }}
+                        placeholder="Precio"
+                        min="0"
+                        step="0.01"
+                        onFocus={(e) => e.target.select()}
+                        onBlur={() => { if (precioInput === "") setPrecioInput("0"); }}
+                    />
+                    <input
+                        type="number"
+                        name="stock"
+                        value={stockInput}
+                        onChange={(e) => {
+                            const val = e.target.value;
+                            setStockInput(val);
+                            setFormData({ ...formData, stock: val === "" ? 0 : Number(val) });
+                        }}
+                        placeholder="Stock"
+                        min="0"
+                        onFocus={(e) => e.target.select()}
+                        onBlur={() => { if (stockInput === "") setStockInput("0"); }}
+                    />
+                </div>
 
                 <select
                     name="categoria_id"
@@ -198,17 +217,19 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                     ))}
                 </select>
 
-                <input
-                    type="text"
-                    name="imagen_url"
-                    placeholder="URL de la imagen (opcional)"
-                    value={formData.imagen_url}
-                    onChange={handleChange}
-                />
-
-                <div className="file-upload">
-                    <label>Subir imagen desde tu computadora:</label>
-                    <input type="file" accept="image/*" onChange={handleFileChange} />
+                {/* ====== FILA DE URL Y SUBIDA ====== */}
+                <div className="row-inputs">
+                    <input
+                        type="text"
+                        name="imagen_url"
+                        placeholder="URL de la imagen (opcional)"
+                        value={formData.imagen_url}
+                        onChange={handleChange}
+                    />
+                    <label className="file-upload-label">
+                        <input type="file" accept="image/*" onChange={handleFileChange} />
+                        Seleccionar archivo
+                    </label>
                 </div>
 
                 {preview && (
@@ -218,11 +239,11 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 )}
 
                 <div className="product-modal-actions">
-                    <button onClick={handleSave} className="product-btn-save">
-                        {producto?.id ? "Actualizar" : "Registrar"}
-                    </button>
                     <button onClick={closeModal} className="product-btn-cancel">
                         Cancelar
+                    </button>
+                    <button onClick={handleSave} className="product-btn-save">
+                        {producto?.id ? "Actualizar" : "Registrar"}
                     </button>
                 </div>
             </div>
@@ -231,3 +252,5 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
 }
 
 export default ProductModal;
+
+

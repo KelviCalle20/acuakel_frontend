@@ -14,7 +14,7 @@
 }
 
 /* ====================== MODAL ====================== */
-.modal {
+.modal-pago {
   background: linear-gradient(145deg, #0c1220, #112235);
   border: 2px solid #00eaff;
   border-radius: 18px;
@@ -30,7 +30,7 @@
 }
 
 /* ====================== TÍTULO NEÓN ====================== */
-.modal h2 {
+.modal-pago h2 {
   color: #00eaff;
   text-shadow:
     0 0 5px #00eaff,
@@ -248,7 +248,7 @@
 }
 
 @media (max-width: 768px) {
-  .modal {
+  .modal-pago {
     width: 95%;
     padding: 1.5rem;
   }

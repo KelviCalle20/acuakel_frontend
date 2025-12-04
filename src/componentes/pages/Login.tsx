@@ -15,19 +15,27 @@ const Login = () => {
     try {
       const res = await axios.post('http://localhost:4000/api/users/login', { correo, contrasena });
 
-      const { nombre, rol, token, id } = res.data.user;
+      // Aquí recibimos el user con id, nombre, roles y token
+      const { id, nombre, roles, token } = res.data.user;
 
-      localStorage.setItem('userName', nombre);
-      localStorage.setItem('userRole', rol);       // Guardamos el rol
+      // Guardamos en localStorage para usar en otros componentes
       localStorage.setItem('userId', id.toString());
-      localStorage.setItem('token', token);
+      localStorage.setItem('userName', nombre);
+      localStorage.setItem('userRole', JSON.stringify(roles)); // array de roles
+      localStorage.setItem('token', token); // JWT
 
-      navigate('/');
+      // Redirección según rol
+      if (roles.includes("Administrador")) {
+        navigate('/admin'); // Ruta para admin
+      } else {
+        navigate('/'); // Ruta normal de usuario
+      }
+
     } catch (err: unknown) {
       if (axios.isAxiosError(err)) {
-        alert(err.response?.data?.error || 'error en el login');
+        alert(err.response?.data?.error || 'Error en el login');
       } else {
-        alert('error desconocido en el login');
+        alert('Error desconocido en el login');
       }
     }
   };
@@ -66,8 +74,6 @@ const Login = () => {
             />
             <label htmlFor="contrasena">Contraseña</label>
             <FaLock className='icon' />
-
-            {/*ÍCONO SOLO APARECE SI SE ESTÁ ESCRIBIENDO */}
             {contrasena.length > 0 && (
               <span
                 className="toggle-password"
@@ -94,3 +100,4 @@ const Login = () => {
 };
 
 export default Login;
+

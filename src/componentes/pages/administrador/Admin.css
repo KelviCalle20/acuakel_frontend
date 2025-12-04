@@ -18,14 +18,18 @@
   top: 0;
   left: -240px;
   width: 240px;
-  height: 100%;
+  height: 100vh;              
   background-color: #1f1f1f;
   color: #fff;
   transition: left 0.3s ease;
   z-index: 1000;
   padding-top: 60px;
   box-shadow: 0 0 15px #00ffff;
+
+  display: flex;            
+  flex-direction: column;  
 }
+
 
 .admin-sidebar.open {
   left: 0;
@@ -66,7 +70,11 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  flex: 1;                  
+  display: flex;
+  flex-direction: column;
 }
+
 
 .admin-link {
   padding: 18px 25px;
@@ -88,6 +96,16 @@
 .admin-link .admin-icon {
   font-size: 2.5rem; /* iconos más grandes */
 }
+
+/* LINK ACTIVO */
+.admin-link.active {
+  color: #fff;
+  padding-left: 35px;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+  background: rgba(0, 255, 255, 0.12);
+  border-left: 4px solid #00ffff;
+}
+
 
 /* =========================
    MAIN (SE REACOMODA)
@@ -140,6 +158,43 @@
   box-shadow: 0 0 15px rgba(0, 188, 212, 0.3);
   transition: width 0.3s ease, margin-left 0.3s ease;
 }
+
+/* =========================
+   CERRAR SESION
+========================= */
+.admin-logout {
+  margin-top: auto;
+  padding: 20px;
+}
+
+.logout-btn {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #00ffff;
+  background: transparent;
+  color: #00ffff;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  box-shadow: 
+    0 0 8px #00ffff,
+    inset 0 0 8px #00ffff;
+  transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+  color: #000;
+  background: #00ffff;
+  box-shadow: 
+    0 0 15px #00ffff,
+    0 0 30px #00ffff;
+}
+
 
 /* =========================
    OVERLAY SOLO EN MÓVIL

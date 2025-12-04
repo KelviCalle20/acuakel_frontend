@@ -37,7 +37,7 @@ export default function PagoModal({ total, onClose, onConfirm }: PagoModalProps)
 
   return (
     <div className="modal-backdrop">
-      <div className="modal">
+      <div className="modal-pago">
         <h2>Selecciona método de pago</h2>
 
         <div className="payment-container">

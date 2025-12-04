@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 import Login from './componentes/pages/Login';
 import Register from './componentes/pages/Register';
 import Home from './componentes/pages/Home';
@@ -11,12 +12,23 @@ import Productos from './componentes/pages/Productos';
 import Carrito from './componentes/pages/Carrito';
 import Admin from './componentes/pages/administrador/Admin';
 import AudioPlayer from "./componentes/AudioPlayer";
+import Estadisticas from "./componentes/pages/administrador/Estadisticas";
+import ProtectedRoute from './common/componentes/ProtectedRoute';
+
+type MediaType = {
+  video: string;
+  audio: string;
+};
+
+type ConditionalAudioPlayerProps = {
+  audioEnabled: boolean;
+  media: MediaType | null;
+};
 
 function AppTitle() {
   const location = useLocation();
 
   useEffect(() => {
-    // Cambia el título según la ruta
     if (location.pathname.startsWith("/admin")) {
       document.title = "AcuaKel-Admin";
     } else {
@@ -26,9 +38,18 @@ function AppTitle() {
 
   return null;
 }
-export default function App() {
 
-  const [media, setMedia] = useState<{ video: string; audio: string } | null>(null);
+function ConditionalAudioPlayer({ audioEnabled, media }: ConditionalAudioPlayerProps) {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  if (isAdminRoute) return null;
+
+  return <AudioPlayer audioUrl={audioEnabled ? media?.audio || null : null} />;
+}
+
+export default function App() {
+  const [media, setMedia] = useState<MediaType | null>(null);
   const [audioEnabled, setAudioEnabled] = useState(false);
 
   useEffect(() => {
@@ -47,24 +68,30 @@ export default function App() {
   return (
     <Router>
       <AppTitle />
-      <AudioPlayer audioUrl={audioEnabled ? media?.audio || null : null} />
+      <ConditionalAudioPlayer audioEnabled={audioEnabled} media={media} />
+
       <Routes>
-        <Route path="/" element={<Home media={media}/>} />
-        {/*<Route path="/Usuarios" element={<UsersPage />} />*/}
-        {/*<Route path="/bandeja-productos" element={<ProductPage />} />*/}
+        <Route path="/" element={<Home media={media} />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
         <Route path="/carrito" element={<Carrito />} />
         <Route path="/productos" element={<Productos />} />
         <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/reset-password/:token" element={<NewPassword />} />
-        <Route path="/register" element={<Register />} />
+
         {/* ADMIN */}
-        <Route path="/admin" element={<Admin />}>
+        <Route path="/admin" element={
+            <ProtectedRoute allowedRoles={["Administrador"]}>
+              <Admin />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="bandeja-usuarios" replace />} />
           <Route path="bandeja-usuarios" element={<UsersPage />} />
           <Route path="bandeja-productos" element={<ProductPage />} />
+          <Route path="estadisticas" element={<Estadisticas />} />
         </Route>
       </Routes>
     </Router>
   );
 }
-//mejoras adicionadas
