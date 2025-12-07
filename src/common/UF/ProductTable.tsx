@@ -39,7 +39,7 @@ export default function ProductTable() {
 
     const fetchProductos = async () => {
         try {
-            const res = await fetch("http://localhost:4000/api/products");
+            const res = await fetch("/api/products");
             if (!res.ok) throw new Error("Error al obtener los productos");
             const data = await res.json();
             setProductos(data);
@@ -178,7 +178,7 @@ export default function ProductTable() {
                                                 onChange={async (e) => {
                                                     try {
                                                         await fetch(
-                                                            `http://localhost:4000/api/products/${producto.id}/status`,
+                                                            `/api/products/${producto.id}/status`,
                                                             {
                                                                 method: "PATCH",
                                                                 headers: { "Content-Type": "application/json" },

@@ -73,7 +73,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
     }, [producto]);
 
     useEffect(() => {
-        fetch("http://localhost:4000/api/categories")
+        fetch("/api/categories")
             .then((res) => res.json())
             .then((data) => setCategorias(data))
             .catch((err) => console.error("Error al cargar categorías:", err));
@@ -105,7 +105,7 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
                 const imageData = new FormData();
                 imageData.append("file", file);
 
-                const uploadRes = await fetch("http://localhost:4000/api/upload", {
+                const uploadRes = await fetch("/api/upload", {
                     method: "POST",
                     body: imageData,
                 });
@@ -116,8 +116,8 @@ function ProductModal({ producto, closeModal, refreshProductos }: Props) {
             }
 
             const url = producto?.id
-                ? `http://localhost:4000/api/products/${producto.id}`
-                : "http://localhost:4000/api/products";
+                ? `/api/products/${producto.id}`
+                : "/api/products";
 
             const method = producto?.id ? "PUT" : "POST";
 

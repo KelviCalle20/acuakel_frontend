@@ -142,3 +142,64 @@
   color: #fff;
   z-index: 10;
 }
+
+
+/* ======= Ajustes para móviles (<= 600px) ======= */
+@media (max-width: 600px) {
+  /* Tarjetas ocupan todo el ancho del contenedor */
+  .page-products .card-products {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* Imagen del producto un poco más pequeña */
+  .page-products .container-img {
+    height: 180px;
+  }
+
+  /* Botones flotantes se mueven debajo de la tarjeta y en fila */
+  .page-products .button-groups {
+    flex-direction: row;
+    bottom: 0.5rem;
+    top: auto;
+    right: 50%;
+    transform: translateX(50%);
+    gap: 0.5rem;
+    position: absolute;
+    z-index: 10;
+  }
+
+  .page-products .button-groups span {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Botón de carrito ajustado */
+  .page-products .add-carts {
+    top: auto;
+    bottom: 0.5rem;
+    right: 0.5rem;
+    padding: 0.7rem;
+  }
+
+  /* Contenido de la tarjeta más compacto */
+  .page-products .content-card-products {
+    padding: 0.5rem;
+  }
+
+  .page-products .content-card-products h3 {
+    font-size: 0.95rem;
+  }
+
+  .page-products .prices {
+    font-size: 0.9rem;
+  }
+
+  /* Badge agotado más pequeño */
+  .page-products .badge-agotado {
+    top: 10px;
+    left: -30px;
+    width: 120px;
+    font-size: 12px;
+  }
+}

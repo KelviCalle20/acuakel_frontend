@@ -18,7 +18,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import FileSaver from "file-saver";
 
-import "./estadisticas.css"; // ✅ IMPORTANTE
+import "./estadisticas.css"; // IMPORTANTE
 
 // Colores para gráficos
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042"];
@@ -86,7 +86,7 @@ export default function Estadisticas() {
   // ===== USUARIOS =====
   useEffect(() => {
     axios
-      .get<UsuarioResumen>("http://localhost:4000/api/estadisticas/usuarios")
+      .get<UsuarioResumen>("/api/estadisticas/usuarios")
       .then((res) => setUsuarios(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -94,7 +94,7 @@ export default function Estadisticas() {
   // ===== PRODUCTOS =====
   useEffect(() => {
     axios
-      .get<ProductoResumen>("http://localhost:4000/api/estadisticas/productos")
+      .get<ProductoResumen>("/api/estadisticas/productos")
       .then((res) => setProductos(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -102,7 +102,7 @@ export default function Estadisticas() {
   // ===== CATEGORIAS =====
   useEffect(() => {
     axios
-      .get<CategoriaResumen>("http://localhost:4000/api/estadisticas/categorias")
+      .get<CategoriaResumen>("/api/estadisticas/categorias")
       .then((res) => setCategorias(res.data))
       .catch((err) => console.error(err));
   }, []);
@@ -110,7 +110,7 @@ export default function Estadisticas() {
   // ===== PEDIDOS =====
   useEffect(() => {
     axios
-      .get<PedidoResumen>("http://localhost:4000/api/estadisticas/pedidos")
+      .get<PedidoResumen>("/api/estadisticas/pedidos")
       .then((res) => setPedidos(res.data))
       .catch((err) => console.error(err));
   }, []);

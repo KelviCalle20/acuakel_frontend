@@ -64,7 +64,7 @@ export default function Admin() {
           </NavLink>
 
           <NavLink
-            to="/admin/categorias"
+            to="/admin/bandeja-categorias"
             className={({ isActive }) => `admin-link ${isActive ? "active" : ""}`}
             onClick={() => setMenuOpen(false)}
           >

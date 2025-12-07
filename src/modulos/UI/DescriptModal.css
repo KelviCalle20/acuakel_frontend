@@ -1,0 +1,265 @@
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.88);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(6px);
+}
+
+.modal-product {
+    background: linear-gradient(145deg, #0d0d0d, #1a1a1a);
+    border-radius: 1.2rem;
+    width: 92%;
+    max-width: 920px;
+    padding: 1.5rem;
+    box-shadow: 0 0 35px #00ffe0;
+    position: relative;
+    animation: modalZoom 0.35s ease;
+}
+
+@keyframes modalZoom {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.modal-close {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+    background: #ff0040;
+    color: #fff;
+    border: none;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    padding: 6px 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px red;
+}
+
+.modal-body {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.modal-img-container {
+    position: relative;
+    overflow: hidden;
+    /* recorta todo lo que salga de la imagen */
+    border-radius: 1rem;
+}
+
+/* Imagen del producto */
+.modal-img {
+    width: 260px;
+    height: 260px;
+    object-fit: cover;
+    border-radius: 1rem;
+    border: 2px solid #00ffe0;
+    box-shadow: 0 0 15px #00ffe0;
+}
+
+/* Badge diagonal solo dentro de la imagen */
+.badge-agotado-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-45deg);
+    width: 160%;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #fff;
+    background-color: rgba(255, 0, 64, 0.6);
+    box-shadow: 0 0 15px #ff0040, 0 0 30px #ff0040 inset;
+    padding: 20px 0;
+    pointer-events: none;
+    z-index: 5;
+}
+
+/* Información del producto */
+.modal-info {
+    flex: 1;
+    color: #fff;
+}
+
+.modal-info h2 {
+    color: #00ffe0;
+    margin-bottom: 0.5rem;
+}
+
+.modal-desc {
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-bottom: 0.8rem;
+}
+
+.modal-price {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #00ffe0;
+}
+
+.modal-stock {
+    font-size: 0.95rem;
+    opacity: 0.8;
+}
+
+.modal-cart-btn {
+    margin-top: 1rem;
+    background: #00ffe0;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    box-shadow: 0 0 12px #00ffe0, 0 0 20px #00ffe0 inset;
+    transition: 0.3s;
+}
+
+.modal-cart-btn:hover {
+    background: #00b3a6;
+    box-shadow: 0 0 18px #00b3a6, 0 0 30px #00b3a6 inset;
+}
+
+.modal-cart-btn:disabled {
+    background: #444;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* Productos relacionados */
+.modal-related-title {
+    margin-top: 1.5rem;
+    color: #00ffe0;
+}
+
+.modal-related-grid {
+    margin-top: 0.8rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 1rem;
+    max-width: 700px;
+}
+
+
+
+.modal-related-card {
+    background: #1a1a1a;
+    border-radius: 0.8rem;
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+    transition: 0.3s;
+    position: relative;
+    width: 170px;
+}
+
+.modal-related-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 18px #00ffe0;
+}
+
+.modal-related-card img {
+    width: 100%;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 0.5rem;
+}
+
+.modal-related-card p {
+    font-size: 0.85rem;
+    margin: 0.3rem 0;
+}
+
+.modal-related-card span {
+    font-size: 0.8rem;
+    color: #00ffe0;
+}
+
+/* Badge pequeño para productos relacionados agotados */
+.badge-agotado-modal-small {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    padding: 4px 8px;
+    background-color: #ff0040;
+    color: #fff;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #ff0040, 0 0 15px #ff0040 inset;
+}
+
+/* ================= RESPONSIVO ================= */
+@media (max-width: 600px) {
+    .modal-img {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 1rem;
+        border: 2px solid #00ffe0;
+        box-shadow: 0 0 15px #00ffe0;
+    }
+
+    .modal-product {
+        padding: 1rem;
+    }
+
+    .modal-related-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .modal-related-title {
+        margin-top: 1.5rem;
+        color: #00ffe0;
+    }
+
+    .modal-related-card {
+        background: #1a1a1a;
+        border-radius: 0.8rem;
+        padding: 1rem;
+        text-align: center;
+        box-shadow: 0 0 10px rgba(0, 255, 255, 0.3);
+        transition: 0.3s;
+        position: relative;
+        width: 130px;
+    }
+
+    .modal-related-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 18px #00ffe0;
+    }
+
+    .modal-related-card img {
+        width: 100%;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 0.5rem;
+    }
+
+    .modal-related-card p {
+        font-size: 0.85rem;
+        margin: 0.3rem 0;
+    }
+
+    .modal-related-card span {
+        font-size: 0.8rem;
+        color: #00ffe0;
+    }
+}

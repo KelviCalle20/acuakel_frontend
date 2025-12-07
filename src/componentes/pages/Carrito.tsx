@@ -18,15 +18,15 @@ export default function Carrito() {
   const [error, setError] = useState<string | null>(null);
   const [showPago, setShowPago] = useState(false);
 
-  const token = localStorage.getItem("token"); // ✅ JWT
+  const token = localStorage.getItem("token"); // JWT
 
-  // ✅ OBTENER CARRITO DEL USUARIO LOGUEADO (SIN usuarioId en la URL)
+  // OBTENER CARRITO DEL USUARIO LOGUEADO (SIN usuarioId en la URL)
   const fetchCarrito = async () => {
     try {
       setLoading(true);
       setError(null);
 
-      const res = await fetch(`http://localhost:4000/api/carrito`, {
+      const res = await fetch(`/api/carrito`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -52,13 +52,12 @@ export default function Carrito() {
     fetchCarrito();
   }, []);
 
-  // ✅ ELIMINAR PRODUCTO
+  // ELIMINAR PRODUCTO
   const removeItem = async (detalleId: number) => {
     if (!confirm("¿Eliminar este producto del carrito?")) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:4000/api/carrito/remove/${detalleId}`,
+      const res = await fetch(`/api/carrito/remove/${detalleId}`,
         {
           method: "DELETE",
           headers: {
@@ -77,12 +76,12 @@ export default function Carrito() {
     }
   };
 
-  // ✅ VACIAR CARRITO
+  // VACIAR CARRITO
   const clearCart = async () => {
     if (!confirm("¿Vaciar todo el carrito?")) return;
 
     try {
-      const res = await fetch(`http://localhost:4000/api/carrito/clear`, {
+      const res = await fetch(`/api/carrito/clear`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -99,13 +98,13 @@ export default function Carrito() {
     }
   };
 
-  // ✅ TOTAL
+  // TOTAL
   const total = items.reduce(
     (sum, item) => sum + Number(item.subtotal || 0),
     0
   );
 
-  // ✅ CONFIRMAR PAGO
+  // CONFIRMAR PAGO
   const handlePagoConfirm = async (metodo: "yape" | "banco") => {
     try {
       const detalles = items.map(item => ({
@@ -114,7 +113,7 @@ export default function Carrito() {
         precio_unitario: Number(item.precio),
       }));
 
-      const res = await fetch(`http://localhost:4000/api/pedidos`, {
+      const res = await fetch(`/api/pedidos`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -10,6 +10,12 @@ import {
 } from "react-icons/fa";
 import "./Productos.css";
 import { useNavigate } from "react-router-dom";
+import DescriptModal from "../../modulos/UI/DescriptModal";
+
+import { useLocation } from "react-router-dom";
+
+
+
 
 interface Producto {
   id: number;
@@ -27,20 +33,61 @@ interface Categoria {
   nombre: string;
 }
 
+
 function Productos() {
   const [productos, setProductos] = useState<Producto[]>([]);
   const [busqueda, setBusqueda] = useState("");
   const [categorias, setCategorias] = useState<Categoria[]>([]);
-  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<number | "">("");
   const [currentPage, setCurrentPage] = useState(1);
   const productosPerPage = 10;
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const [productoModal, setProductoModal] = useState<Producto | null>(null);
+  const [relacionados, setRelacionados] = useState<Producto[]>([]);
+  const [stockModal, setStockModal] = useState<number>(0);
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const categoriaQuery = queryParams.get("categoria");
+
+  const [categoriaSeleccionada, setCategoriaSeleccionada] = useState<number | "">(
+    categoriaQuery ? Number(categoriaQuery) : ""
+  );
+
+
+
+  const abrirModal = (producto: Producto) => {
+    setProductoModal(producto);
+
+    const relacionadosFiltrados = productos.filter(
+      (p) =>
+        p.categoria?.id === producto.categoria?.id &&
+        p.id !== producto.id
+    );
+
+    setRelacionados(relacionadosFiltrados.slice(0, 4));
+    setStockModal(producto.stock); // inicializa stock del modal
+  };
+
+  const handleAgregarModal = (producto: Producto) => {
+    if (stockModal === 0) return;
+
+    // Llama a la función original para backend
+    agregarAlCarrito(producto);
+
+    // Actualiza el stock local del modal
+    setStockModal(prev => prev - 1);
+
+    // Opcional: actualizar stock en la lista de productos principal
+    setProductos(prev =>
+      prev.map(p => (p.id === producto.id ? { ...p, stock: p.stock - 1 } : p))
+    );
+  };
+
 
   // Obtener productos
   const fetchProductos = async () => {
     try {
-      const res = await fetch("http://localhost:4000/api/products");
+      const res = await fetch("/api/products");
       if (!res.ok) throw new Error("Error al obtener productos");
       const data = await res.json();
       const activos = data.filter((p: Producto) => p.estado === true);
@@ -53,7 +100,7 @@ function Productos() {
 
   // Obtener categorías
   useEffect(() => {
-    fetch("http://localhost:4000/api/categories")
+    fetch("/api/categories")
       .then(res => res.json())
       .then(data => setCategorias(data))
       .catch(err => console.error("Error al cargar categorías:", err));
@@ -92,7 +139,7 @@ function Productos() {
     }
 
     try {
-      const res = await fetch("http://localhost:4000/api/carrito/add", {
+      const res = await fetch("/api/carrito/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -119,6 +166,36 @@ function Productos() {
         <section className="container top-products">
           <h1 className="heading-1">Tienda de Productos</h1>
 
+          {/* Botón Home */}
+          <button
+            className="btn-home"
+            onClick={() => navigate("/")}
+            style={{
+              marginLeft: "10px",
+              backgroundColor: "#00ffe0",
+              border: "none",
+              borderRadius: "6px",
+              padding: "8px 12px",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+              boxShadow: "0 0 10px #00ffe0, 0 0 20px #00ffe0 inset",
+              transition: "0.3s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#00b3a6";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                "0 0 20px #00b3a6, 0 0 30px #00b3a6 inset";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#00ffe0";
+              (e.currentTarget as HTMLButtonElement).style.boxShadow =
+                "0 0 10px #00ffe0, 0 0 20px #00ffe0 inset";
+            }}
+          >
+            <FaHome style={{ marginRight: "5px" }} /> Home
+          </button>
+
           <div className="search-container" style={{ display: "flex", alignItems: "center" }}>
             {/* Buscador */}
             <input
@@ -139,6 +216,7 @@ function Productos() {
                 const val = e.target.value;
                 setCategoriaSeleccionada(val === "" ? "" : Number(val));
                 setCurrentPage(1);
+                navigate(`/productos${val === "" ? "" : `?categoria=${val}`}`);
               }}
               style={{
                 marginLeft: "10px",
@@ -148,6 +226,7 @@ function Productos() {
                 backgroundColor: "#1a1a1a",
                 color: "#fff",
                 cursor: "pointer",
+                fontSize: "1.4rem",
               }}
             >
               <option value="">Todas las categorías</option>
@@ -157,36 +236,6 @@ function Productos() {
                 </option>
               ))}
             </select>
-
-            {/* Botón Home */}
-            <button
-              className="btn-home"
-              onClick={() => navigate("/")}
-              style={{
-                marginLeft: "10px",
-                backgroundColor: "#00ffe0",
-                border: "none",
-                borderRadius: "6px",
-                padding: "8px 12px",
-                cursor: "pointer",
-                display: "flex",
-                alignItems: "center",
-                boxShadow: "0 0 10px #00ffe0, 0 0 20px #00ffe0 inset",
-                transition: "0.3s",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#00b3a6";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  "0 0 20px #00b3a6, 0 0 30px #00b3a6 inset";
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLButtonElement).style.backgroundColor = "#00ffe0";
-                (e.currentTarget as HTMLButtonElement).style.boxShadow =
-                  "0 0 10px #00ffe0, 0 0 20px #00ffe0 inset";
-              }}
-            >
-              <FaHome style={{ marginRight: "5px" }} /> Home
-            </button>
           </div>
 
           <div className="container-product">
@@ -207,9 +256,10 @@ function Productos() {
                         alt={producto.nombre}
                       />
                       <div className="button-groups">
-                        <span>
+                        <span onClick={() => abrirModal(producto)}>
                           <FaEye />
                         </span>
+
                         <span>
                           <FaHeart />
                         </span>
@@ -272,6 +322,19 @@ function Productos() {
           </div>
         </section>
       </main>
+      {productoModal && (
+        <DescriptModal
+          producto={productoModal}
+          relacionados={relacionados}
+          cerrar={() => setProductoModal(null)}
+          agregarAlCarrito={handleAgregarModal} // maneja stock
+          abrirModal={abrirModal} // <-- necesario para abrir productos relacionados
+          stock={stockModal} // pasa stock actual
+        />
+      )}
+
+
+
     </div>
   );
 }

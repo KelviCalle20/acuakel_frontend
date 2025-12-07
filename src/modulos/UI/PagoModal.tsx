@@ -1,13 +1,9 @@
 // src/modulos/UI/PagoModal.tsx
 import { useState } from "react";
 
-// Logos de referencia (NO son QR)
-import YapeLogo from "../assets/YapeLogo.jpg";
-import BancoSolLogo from "../assets/BancoSolLogo.jpg";
-
 // QRs usados realmente para pagar
-import YapeQR from "../assets/Yape.jpg";
-import BancoSolQR from "../assets/BancoSol.jpg";
+import YapeQR from "../QRs/Yape.jpg";
+import BancoSolQR from "../QRs/BancoSol.jpg";
 
 import "./PagoModal.css";
 
@@ -18,6 +14,7 @@ interface PagoModalProps {
 }
 
 export default function PagoModal({ total, onClose, onConfirm }: PagoModalProps) {
+  const MEDIA_URL = import.meta.env.VITE_MEDIA_URL;
   const [metodo, setMetodo] = useState<"" | "yape" | "banco">("");
 
   // QRs según método elegido
@@ -62,12 +59,12 @@ export default function PagoModal({ total, onClose, onConfirm }: PagoModalProps)
             <div className="payment-reference">
               <div className="method-images">
                 <div className="logo-card">
-                  <img src={YapeLogo} alt="Yape" />
+                  <img src={`${MEDIA_URL}/img/YapeLogo.jpg`} alt="Yape"/>
                   <span>Yape</span>
                 </div>
 
                 <div className="logo-card">
-                  <img src={BancoSolLogo} alt="Banco Sol" />
+                  <img src={`${MEDIA_URL}/img/BancoSolLogo.jpg`} alt="Banco Sol"/>
                   <span>Banco Sol</span>
                 </div>
               </div>

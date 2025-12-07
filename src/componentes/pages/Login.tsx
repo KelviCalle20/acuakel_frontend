@@ -13,7 +13,7 @@ const Login = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await axios.post('http://localhost:4000/api/users/login', { correo, contrasena });
+      const res = await axios.post('/api/users/login', { correo, contrasena });
 
       // Aquí recibimos el user con id, nombre, roles y token
       const { id, nombre, roles, token } = res.data.user;

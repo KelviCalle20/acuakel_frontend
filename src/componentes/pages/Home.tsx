@@ -15,7 +15,14 @@ interface Producto {
   imagen_url: string;
 }
 
+interface Categoria {
+  id: number;
+  nombre: string;
+  imagen_url?: string;
+}
+
 function Home({ media }: { media: { video: string; audio: string } | null }) {
+  const MEDIA_URL = import.meta.env.VITE_MEDIA_URL;
   const [menuOpen, setMenuOpen] = useState(false);
   const [userName, setUserName] = useState<string | null>(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -34,7 +41,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
   useEffect(() => {
     const fetchProductos = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/products");
+        const res = await fetch("/api/products");
         const data = await res.json();
         setProductos(data);
       } catch (err) {
@@ -59,12 +66,32 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
   useEffect(() => {
     const video = videoRef.current;
-    if (video && media?.video) {
-      video.src = media.video;
-      video.playbackRate = 3;
+    if (!video || !media?.video) return;
+
+    video.src = media.video;
+
+    const setSpeed = () => {
+      video.playbackRate = 2;
       video.play().catch(() => { });
-    }
+    };
+
+    // Cuando el video esté listo
+    video.addEventListener("loadedmetadata", setSpeed);
+
+    // Respaldo para móviles (primer toque)
+    const enableOnTouch = () => {
+      video.playbackRate = 2;
+      video.play().catch(() => { });
+      document.removeEventListener("touchstart", enableOnTouch);
+    };
+    document.addEventListener("touchstart", enableOnTouch);
+
+    return () => {
+      video.removeEventListener("loadedmetadata", setSpeed);
+      document.removeEventListener("touchstart", enableOnTouch);
+    };
   }, [media]);
+
 
 
 
@@ -115,6 +142,25 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
     }
   }, []);
 
+  const [bestCategories, setBestCategories] = useState<Categoria[]>([]);
+
+  const fetchBestCategories = async () => {
+    try {
+      const res = await fetch("/api/categories"); // Aquí puedes filtrar las mejores categorías
+      const data: Categoria[] = await res.json();
+      const mejores = data.slice(0, 3); // Limitar a 3 categorías
+      setBestCategories(mejores);
+    } catch (err) {
+      console.error(err);
+      setBestCategories([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchBestCategories(); // llama a la función que obtiene las mejores categorías
+  }, []); // actualmente vacío
+
+
 
   return (
     <>
@@ -141,7 +187,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
             <div className="language-dropdown" ref={langRef}>
               <button className="lang-btn" onClick={() => setLangOpen(!langOpen)}>
-                <img src="src/componentes/assets/planeta.png" alt="Language" className="lang-globe" />
+                <img src={`${MEDIA_URL}/img/planeta.png`} alt="Language" className="lang-globe" />
               </button>
 
               {langOpen && (
@@ -153,7 +199,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
                     }}
                     className={`lang-item ${i18n.language === "es" ? "active" : ""}`}
                   >
-                    <img src="src/componentes/assets/español.png" alt="Español" />
+                    <img src={`${MEDIA_URL}/img/español.png`} alt="Español" />
                     <span>Español</span>
                   </button>
 
@@ -164,8 +210,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
                     }}
                     className={`lang-item ${i18n.language === "en" ? "active" : ""}`}
                   >
-
-                    <img src="src/componentes/assets/ingles.png" alt="English" />
+                    <img src={`${MEDIA_URL}/img/ingles.png`} alt="English" />
                     <span>English</span>
                   </button>
                 </div>
@@ -237,7 +282,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
           <li><a href="#">Inicio</a></li>
           <li><a href="#">Tienda</a></li>
           <li><a href="#">Aprender sobre acuarismo</a></li>
-          <li><a href="#">Testimonios</a></li>
+          <li><Link to="/productos">{t("navbar.products")}</Link></li>
           <li><a href="#">Más</a></li>
           <li><a href="#">Blog</a></li>
           <li className="mobile-cart">
@@ -248,10 +293,6 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
         </ul>
       </div>
       {menuOpen && <div className="overlay" onClick={() => setMenuOpen(false)} />}
-      {/*<div className="admin-button-container">
-          <Link to="/usuarios" className="banner-btn">administrador</Link>
-        </div>
-        */}
       <section className="banner">
         {media && (
           <video
@@ -261,10 +302,12 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
             muted
             loop
             playsInline
+            preload="auto"   // precarga para que no se detenga
+            poster="/ruta/a/preview.jpg" // miniatura mientras carga
           >
             <source src={media.video} type="video/mp4" />
-            Tu navegador no soporta video.
           </video>
+
         )}
 
 
@@ -312,22 +355,27 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
         </section>
 
         {/* SECCIÓN DE CATEGORÍAS */}
-        <section className="container top-categories" >
+        <section className="container top-categories">
           <h1 className="heading-1" id="2">Mejores Categorías</h1>
           <div className="container-categories">
-            <div className="card-category category-moca">
-              <p>Filtros de Mochila</p>
-              <span>Ver más</span>
-            </div>
-            <div className="card-category category-expreso">
-              <p>Filtros Internos</p>
-              <span>Ver más</span>
-            </div>
-            <div className="card-category category-capuchino">
-              <p>Bombas de Aire</p>
-              <span>Ver más</span>
-            </div>
+            {bestCategories.map((cat) => (
+              <div
+                key={cat.id}
+                className={`card-category category-${cat.id}`}
+                onClick={() => navigate(`/productos?categoria=${cat.id}`)}
+                style={{ cursor: "pointer" }}
+              >
+                {cat.imagen_url ? (
+                  <img src={cat.imagen_url} alt={cat.nombre} style={{ width: "100%", borderRadius: "8px" }} />
+                ) : (
+                  <div className="no-image">Sin imagen</div>
+                )}
+                <p>{cat.nombre}</p>
+                <span>Ver más</span>
+              </div>
+            ))}
           </div>
+
         </section>
 
         {/* SECCIÓN DE PRODUCTOS */}
@@ -360,11 +408,11 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
         {/* GALERÍA */}
         <section className="gallery" id="3">
-          <img src="src/componentes/assets/productos/Galeria1.jpg" alt="Gallery Img1" className="gallery-img-1" />
-          <img src="src/componentes/assets/productos/Galeria2.jpg" alt="Gallery Img2" className="gallery-img-2" />
-          <img src="src/componentes/assets/productos/Galeria3.jpg" alt="Gallery Img3" className="gallery-img-3" />
-          <img src="src/componentes/assets/productos/Galeria4.jpg" alt="Gallery Img4" className="gallery-img-4" />
-          <img src="src/componentes/assets/productos/Galeria5.jpg" alt="Gallery Img5" className="gallery-img-5" />
+          <img src={`${MEDIA_URL}/img/Galeria1.jpg`} alt="Gallery Img1" className="gallery-img-1" />
+          <img src={`${MEDIA_URL}/img/Galeria2.jpg`} alt="Gallery Img2" className="gallery-img-2" />
+          <img src={`${MEDIA_URL}/img/Galeria3.jpg`} alt="Gallery Img3" className="gallery-img-3" />
+          <img src={`${MEDIA_URL}/img/Galeria4.jpg`} alt="Gallery Img4" className="gallery-img-4" />
+          <img src={`${MEDIA_URL}/img/Galeria5.jpg`} alt="Gallery Img5" className="gallery-img-5" />
         </section>
 
         {/* ESPECIALES */}
@@ -403,7 +451,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
           <div className="container-blogs">
             <div className="card-blog">
               <div className="container-img">
-                <img src="src/componentes/assets/productos/Blog1.jpg" alt="Imagen Blog 1" />
+                <img src={`${MEDIA_URL}/img/Blog1.jpg`} alt="Imagen Blog 1" />
                 <div className="button-group-blog">
                   <span><FaSearch /></span>
                   <span><FaLink /></span>
@@ -419,7 +467,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
             <div className="card-blog">
               <div className="container-img">
-                <img src="src/componentes/assets/productos/Blog2.jpg" alt="Imagen Blog 2" />
+                <img src={`${MEDIA_URL}/img/Blog2.jpg`} alt="Imagen Blog 2" />
                 <div className="button-group-blog">
                   <span><FaSearch /></span>
                   <span><FaLink /></span>
@@ -435,7 +483,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
 
             <div className="card-blog">
               <div className="container-img">
-                <img src="src/componentes/assets/productos/Blog3.jpg" alt="Imagen Blog 3" />
+                <img src={`${MEDIA_URL}/img/Blog3.jpg`} alt="Imagen Blog 3" />
                 <div className="button-group-blog">
                   <span><FaSearch /></span>
                   <span><FaLink /></span>
@@ -554,8 +602,7 @@ function Home({ media }: { media: { video: string; audio: string } | null }) {
           {/* Copyright */}
           <div className="copyright">
             <p>Adictos al mundo acuatico &copy; 2025</p>
-            <img src="src/componentes/assets/productos/payment.png" alt="Pagos" />{/*src/componentes/assets/productos/payment.png*/}
-
+            <img src={`${MEDIA_URL}/img/payment.png`} alt="Pagos" />
           </div>
         </div>
       </footer>

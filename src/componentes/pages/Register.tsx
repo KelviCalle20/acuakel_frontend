@@ -28,7 +28,7 @@ const Register = () => {
 
     try {
       // No enviamos rol, backend lo asigna automáticamente
-      const res = await axios.post('http://localhost:4000/api/users/register', {
+      const res = await axios.post('/api/users/register', {
         nombre,
         apellido_paterno,
         apellido_materno,

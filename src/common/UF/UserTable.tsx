@@ -45,7 +45,7 @@ export default function UserTable() {
         return;
       }
 
-      const res = await fetch("http://localhost:4000/api/users", {
+      const res = await fetch("/api/users", {
         headers: {
           "Authorization": `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -189,7 +189,7 @@ export default function UserTable() {
                         checked={user.estado}
                         onChange={async (e) => {
                           try {
-                            await fetch(`http://localhost:4000/api/users/${user.id}/status`, {
+                            await fetch(`/api/users/${user.id}/status`, {
                               method: "PATCH",
                               headers: { "Content-Type": "application/json" },
                               body: JSON.stringify({ estado: e.target.checked }),

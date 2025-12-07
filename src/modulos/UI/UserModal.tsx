@@ -41,7 +41,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const res = await fetch("http://localhost:4000/api/roles", {
+        const res = await fetch("/api/roles", {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -91,7 +91,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
 
       if (user && user.id) {
         // Actualizar usuario
-        response = await fetch(`http://localhost:4000/api/users/${user.id}`, {
+        response = await fetch(`/api/users/${user.id}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -102,7 +102,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
             apellido_paterno: formData.apellido_paterno,
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
-            usuarioActualizacion: loggedUserId, // ✅ id de quien actualiza
+            usuarioActualizacion: loggedUserId, // id de quien actualiza
           }),
         });
         if (!response.ok) throw new Error("No se pudo actualizar usuario");
@@ -110,7 +110,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         userId = data.user.id;
       } else {
         // Registrar usuario
-        response = await fetch("http://localhost:4000/api/users/register", {
+        response = await fetch("/api/users/register", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -122,7 +122,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
             apellido_materno: formData.apellido_materno,
             correo: formData.correo,
             contrasena: formData.contrasena,
-            usuarioCreacion: loggedUserId, // ✅ id de quien crea
+            usuarioCreacion: loggedUserId, // id de quien crea
           }),
         });
         if (!response.ok) throw new Error("No se pudo registrar usuario");
@@ -135,7 +135,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
         const rolSeleccionado = roles.find(r => r.nombre === formData.rol);
         if (rolSeleccionado) {
           const rolResp = await fetch(
-            `http://localhost:4000/api/role_user/${userId}`,
+            `/api/role_user/${userId}`,
             {
               method: "POST",
               headers: {
@@ -144,7 +144,7 @@ function UserModal({ user, closeModal, refreshUsers }: Props) {
               },
               body: JSON.stringify({ 
                 rolId: rolSeleccionado.id,
-                loggedUserId: loggedUserId // ✅ enviamos id de quien asigna
+                loggedUserId: loggedUserId // enviamos id de quien asigna
               }),
             }
           );

@@ -1,61 +1,80 @@
 import React, { useState } from "react";
-import axios from "axios";
-import "./Login.css"; // reutilizamos el mismo CSS
-import { FaEnvelope } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import axios, { AxiosError } from "axios";
+import NewPassword from "./NewPassword";
+import "./ResetPassword.css";
 
-const ResetPassword = () => {
-    const [email, setEmail] = useState("");
-    const [message, setMessage] = useState("");
-    const [sent, setSent] = useState(false);
+interface ForgotPasswordDTO {
+  correo: string;
+}
 
-    const handleReset = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            await axios.post("http://localhost:4000/api/users/reset-password", { email });
-            setSent(true);
-            setMessage("Si el correo existe, recibirás un enlace para restablecer tu contraseña.");
-        } catch (err: unknown) {
-            let msg = "Error desconocido";
-            if (axios.isAxiosError(err)) {
-                msg = err.response?.data?.error || err.message || msg;
-            }
-            setMessage(msg);
-        }
-    };
+interface ForgotPasswordResponse {
+  message: string;
+}
 
+const ResetPassword: React.FC = () => {
+  const [correo, setCorreo] = useState<string>("");
+  const [codigoEnviado, setCodigoEnviado] = useState<boolean>(false);
+  const [codigo, setCodigo] = useState<string>("");
+
+  const enviarCodigo = async () => {
+    if (!correo) {
+      alert("Ingresa tu correo");
+      return;
+    }
+
+    const data: ForgotPasswordDTO = { correo };
+
+    try {
+      const response = await axios.post<ForgotPasswordResponse>(
+        "/api/auth/forgot-password",
+        data
+      );
+      alert(response.data.message);
+      setCodigoEnviado(true);
+    } catch (err) {
+      const error = err as AxiosError<ForgotPasswordResponse>;
+      alert(error.response?.data?.message || "Error al enviar el código");
+    }
+  };
+
+  if (codigoEnviado) {
     return (
-        <div className="login-page">
-            <div className="wrapper-login">
-                <form onSubmit={handleReset}>
-                    <h1>{sent ? "¡Correo enviado!" : "Restablecer Contraseña"}</h1>
-
-                    {!sent && (
-                        <div className="input-box">
-                            <input
-                                type="email"
-                                placeholder="Correo electrónico"
-                                required
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                            <FaEnvelope className="icon" />
-                        </div>
-                    )}
-
-                    {!sent && <button type="submit">Enviar enlace</button>}
-
-                    {message && (
-                        <p style={{ textAlign: "center", marginTop: "10px", color: "#fff" }}>{message}</p>
-                    )}
-
-                    <div className="register-link">
-                        <Link to="/login">{sent ? "Volver al login" : "Cancelar"}</Link>
-                    </div>
-                </form>
-            </div>
+      <div className="reset-pages">
+        <div className="wrapper-resets">
+          <NewPassword correo={correo} codigo={codigo} setCodigo={setCodigo} />
         </div>
+      </div>
     );
+  }
+
+  return (
+    <div className="reset-pages">
+      <div className="wrapper-resets">
+        <h1>Restablecer contraseña</h1>
+
+        <div className="input-boxs">
+          <input
+            type="email"
+            id="correo"
+            required
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+            autoComplete="off"
+          />
+          <label htmlFor="correo">Correo electrónico</label>
+        </div>
+
+        <button onClick={enviarCodigo}>Enviar código</button>
+
+        <div className="info-text">
+          <p>
+            <Link to="/login">Volver al inicio de sesión</Link>
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ResetPassword;
